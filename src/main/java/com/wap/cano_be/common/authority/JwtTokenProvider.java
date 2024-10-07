@@ -1,5 +1,6 @@
 package com.wap.cano_be.common.authority;
 
+import com.wap.cano_be.common.dto.CustomUser;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -46,7 +47,7 @@ public class JwtTokenProvider {
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", authorities)
-                .claim("userId", ((CustomUser) authentication.getPrincipal().getUserId()))
+                .claim("userId", (((CustomUser) authentication.getPrincipal()).getUserId()))
                 .setIssuedAt(now)
                 .setExpiration(accessExpiration)
                 .signWith(key, SignatureAlgorithm.HS256)
