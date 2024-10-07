@@ -11,23 +11,20 @@ import lombok.Getter;
                 @UniqueConstraint(name = "uk_member_login_id", columnNames = {"loginId"})
         }
 )
+@Getter
 public class Member {
-    @Getter
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Getter
     @Column(nullable = false, length = 20)
     private String loginId;
 
-    @Getter
     @Column(nullable = false, length = 10)
     private String name;
 
     @Column(nullable = false, length = 100)
     private String password;
 
-    @Getter
     @Column(nullable = false, length = 30)
     private String email;
 
