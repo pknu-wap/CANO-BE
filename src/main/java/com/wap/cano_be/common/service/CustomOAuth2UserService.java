@@ -40,5 +40,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return new PrincipalDetails(member, oAuth2UserAttributes, userNameAttributeName);
     }
 
+    private Member getOrSave(OAuth2UserInfo oAuth2UserInfo){
+        Member member = memberRepository.findByEmail(oAuth2UserInfo.email())
+                .orElseGet(oAuth2UserInfo::toEntity);
+        return memberRepository.save(member);
+    }
 
 }
