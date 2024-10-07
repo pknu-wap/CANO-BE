@@ -21,7 +21,11 @@ public class MemberRole {
 
     public MemberRole() {}
 
-    @Builder
+    public MemberRole(ROLE role, Member member){
+        this.role = role;
+        this.member = member;
+    }
+
     public MemberRole(Long id, ROLE role, Member member){
         this.id = id;
         this.role = role;
