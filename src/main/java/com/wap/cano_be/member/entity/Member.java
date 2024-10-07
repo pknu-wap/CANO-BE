@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 
 @Entity
 @Table(
@@ -27,6 +29,9 @@ public class Member {
 
     @Column(nullable = false, length = 30)
     private String email;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    private List<MemberRole> memberRoles;
 
     public Member() {}
 
