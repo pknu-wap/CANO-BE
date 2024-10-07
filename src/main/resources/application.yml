@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: cano_be
+  profiles:
+    include: oauth2
