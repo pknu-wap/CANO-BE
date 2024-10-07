@@ -14,12 +14,15 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final CustomOAuth2UserService oAuth2UserService;
 
     public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
@@ -38,14 +41,36 @@ public class SecurityConfig {
         http
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .logout(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(httpRequest -> httpRequest
-                        .requestMatchers("/api/member/signup", "/api/member/login").anonymous()
-                        .anyRequest().permitAll()
+                        .requestMatchers(
+                                new AntPathRequestMatcher("/"),
+                                new AntPathRequestMatcher("/api/member/signup"),
+                                new AntPathRequestMatcher("/api/member/login"),
+                                new AntPathRequestMatcher("/api/auth/success")
+                        ).permitAll()
+                        .anyRequest().authenticated()
                 )
-                .addFilterBefore((Filter) jwtTokenProvider, UsernamePasswordAuthenticationFilter.class);
+                // oauth2 설정
+                .oauth2Login(oauth -> oauth
+                        // OAuth2 로그인 성공 시 사용자 정보 가져올 설정 담당
+                        .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
+                        // 로그인 성공 handler
+                        .successHandler(oAuth2SuccessHandler)
+                )
+                // jwt 설정
+                .addFilterBefore((Filter) jwtTokenProvider, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new TokenExceptionFilter(), jwtTokenProvider.getClass())
+                // 예외 처리
+                .exceptionHandling((exceptions) -> exceptions
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                        .accessDeniedHandler(new CustomAccessDeniedHandler())
+                );
         return http.build();
     }
 
