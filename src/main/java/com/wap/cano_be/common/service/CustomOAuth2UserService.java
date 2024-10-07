@@ -1,7 +1,10 @@
 package com.wap.cano_be.common.service;
 
+import com.wap.cano_be.common.dto.OAuth2UserInfo;
+import com.wap.cano_be.common.dto.PrincipalDetails;
 import com.wap.cano_be.member.entity.Member;
 import com.wap.cano_be.member.repository.MemberRepository;
+import jakarta.security.auth.message.AuthException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -31,7 +34,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .getUserInfoEndpoint().getUserNameAttributeName();
 
         // 4. 유저 정보 DTO 생성
-        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfo.of(registrationId, oAuth2UserAttributes);
+        OAuth2UserInfo oAuth2UserInfo = null;
+        try {
+            oAuth2UserInfo = OAuth2UserInfo.of(registrationId, oAuth2UserAttributes);
+        } catch (AuthException e) {
+            throw new RuntimeException(e);
+        }
 
         // 5. 회원가입 및 로그인
         Member member = getOrSave(oAuth2UserInfo);
