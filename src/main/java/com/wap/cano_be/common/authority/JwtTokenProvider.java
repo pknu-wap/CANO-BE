@@ -1,10 +1,9 @@
 package com.wap.cano_be.common.authority;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SecurityException;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -76,5 +75,22 @@ public class JwtTokenProvider {
 
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
+
+    // Token 검증
+    public boolean validateToken(String token){
+        try {
+            getClaims(token);
+            return true;
+        } catch (Exception e){
+            if(e instanceof SecurityException){}
+            else if(e instanceof MalformedJwtException){}
+            else if(e instanceof ExpiredJwtException){}
+            else if(e instanceof UnsupportedJwtException){}
+            else if(e instanceof IllegalArgumentException){}
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
 
 }
