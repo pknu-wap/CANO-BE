@@ -1,5 +1,6 @@
 package com.wap.cano_be.common.authority;
 
+import jakarta.servlet.Filter;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
 
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, HttpSession httpSession) throws Exception {
         http
@@ -29,7 +34,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/member/signup", "/api/member/login").anonymous()
                         .anyRequest().permitAll()
                 )
-                .addFilterBefore(jwtTokenProvider, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore((Filter) jwtTokenProvider, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
