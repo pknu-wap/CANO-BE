@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,6 +25,8 @@ public class Member {
     @Column(nullable = false, length = 10)
     private String name;
 
+    private String profile;
+
     @Column(nullable = false, length = 100)
     private String password;
 
@@ -31,16 +34,18 @@ public class Member {
     private String email;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
-    private List<MemberRole> memberRoles;
+    private List<MemberRole> memberRoles = new ArrayList<>();
 
     public Member() {}
 
     @Builder
-    public Member(Long id, String loginId, String name, String password, String email){
+    public Member(Long id, String loginId, String name, String profile, String password, String email, MemberRole role){
         this.id = id;
         this.loginId = loginId;
         this.name = name;
+        this.profile = profile;
         this.password = password;
         this.email = email;
+        memberRoles.add(role);
     }
 }
