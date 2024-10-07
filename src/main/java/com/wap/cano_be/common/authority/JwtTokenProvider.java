@@ -1,16 +1,21 @@
 package com.wap.cano_be.common.authority;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -48,7 +53,28 @@ public class JwtTokenProvider {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
         return new TokenInfo("Bearer", accessToken);
+    }
 
+    // Token 정보 추출
+    public Authentication getAuthentication(String token) {
+        Claims claims = getClaims(token);
+
+        String auth = (String) claims.get("auth");
+        if(auth == null){
+            throw new RuntimeException("잘못된 토큰입니다.");
+        }
+
+        Long userId = claims.get("userId", Long.class);
+        if(userId == null){
+            throw new RuntimeException("잘못된 토큰입니다.");
+        }
+
+        // 권한 정보 추출
+        Collection<GrantedAuthority> authorities =
+                auth.lines().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        UserDetails principal = new CustomUser(userId, claims.getSubject(), "", authorities);
+
+        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 
 }
