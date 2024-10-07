@@ -11,11 +11,11 @@ public record OAuth2UserInfo(
         String email,
         String profile
 ) {
-    public static OAuth2UserInfo of(String registrationId, Map<String, Object> attributes) {
+    public static OAuth2UserInfo of(String registrationId, Map<String, Object> attributes) throws AuthException {
         return switch (registrationId) {
             case "google" -> ofGoogle(attributes);
             case "kakao" -> ofKakao(attributes);
-            default -> throw new AuthException(ILLEGAL_REGISTRATION_ID);
+            default -> throw new AuthException("잘못된 registration id");
         };
     }
 
