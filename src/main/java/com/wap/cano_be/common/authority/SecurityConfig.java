@@ -1,7 +1,9 @@
 package com.wap.cano_be.common.authority;
 
+import com.wap.cano_be.common.service.CustomOAuth2UserService;
 import jakarta.servlet.Filter;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -24,8 +26,11 @@ public class SecurityConfig {
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final CustomOAuth2UserService oAuth2UserService;
 
-    public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
+    @Autowired
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider, OAuth2SuccessHandler oAuth2SuccessHandler, CustomOAuth2UserService oAuth2UserService) {
         this.jwtTokenProvider = jwtTokenProvider;
+        this.oAuth2SuccessHandler = oAuth2SuccessHandler;
+        this.oAuth2UserService = oAuth2UserService;
     }
 
     // Security 적용 X
@@ -64,13 +69,7 @@ public class SecurityConfig {
                         .successHandler(oAuth2SuccessHandler)
                 )
                 // jwt 설정
-                .addFilterBefore((Filter) jwtTokenProvider, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new TokenExceptionFilter(), jwtTokenProvider.getClass())
-                // 예외 처리
-                .exceptionHandling((exceptions) -> exceptions
-                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                        .accessDeniedHandler(new CustomAccessDeniedHandler())
-                );
+                .addFilterBefore((Filter) jwtTokenProvider, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
