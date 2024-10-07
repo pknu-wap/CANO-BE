@@ -92,5 +92,11 @@ public class JwtTokenProvider {
         return false;
     }
 
-
+    private Claims getClaims(String token){
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
 }
