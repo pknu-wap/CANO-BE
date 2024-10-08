@@ -2,6 +2,7 @@ package com.wap.cano_be.member.entity;
 
 import com.wap.cano_be.common.status.Gender;
 import com.wap.cano_be.common.status.ROLE;
+import com.wap.cano_be.member.dto.MemberDtoResponse;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -84,6 +85,10 @@ public class Member implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public MemberDtoResponse toDto(){
+        return new MemberDtoResponse(id, loginId, name, profile, email);
     }
 
     public Member() {}
