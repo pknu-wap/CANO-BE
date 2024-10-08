@@ -25,7 +25,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService oAuth2UserService;
 
     @Autowired
-    public SecurityConfig(JwtTokenProvider jwtTokenProvider, OAuth2SuccessHandler oAuth2SuccessHandler, CustomOAuth2UserService oAuth2UserService) {
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider, CustomOAuth2UserService oAuth2UserService) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.oAuth2UserService = oAuth2UserService;
     }
