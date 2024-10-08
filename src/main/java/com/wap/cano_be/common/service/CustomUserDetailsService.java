@@ -37,10 +37,14 @@ public class CustomUserDetailsService implements UserDetailsService {
                 member.getId(),
                 member.getLoginId(),
                 passwordEncoder.encode(member.getPassword()
-                ), member.getMemberRoles().stream()
-                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole()))
-                        .collect(Collectors.toList())
+                ), member.getAuthorities()
         );
     }
 
 }
+
+/**
+ * member.getMemberRoles().stream()
+ *                         .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole()))
+ *                         .collect(Collectors.toList())
+ */
