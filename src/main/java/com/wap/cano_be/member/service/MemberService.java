@@ -2,6 +2,9 @@ package com.wap.cano_be.member.service;
 
 import com.wap.cano_be.common.authority.JwtTokenProvider;
 import com.wap.cano_be.common.authority.TokenInfo;
+import com.wap.cano_be.member.dto.LoginDto;
+import com.wap.cano_be.member.dto.MemberDtoRequest;
+import com.wap.cano_be.member.dto.MemberDtoResponse;
 import com.wap.cano_be.member.entity.Member;
 import com.wap.cano_be.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
@@ -31,7 +34,7 @@ public class MemberService {
     // 회원가입
     public String signUp(MemberDtoRequest memberDtoRequest){
         // ID 중복 검사
-        Optional<Member> optionalMember = memberRepository.findByLoginId(memberDtoRequest.getLoginId());
+        Optional<Member> optionalMember = memberRepository.findByLoginId(memberDtoRequest.loginId());
         if(optionalMember.isPresent()){
             throw new InvalidInputException("loginId", "이미 등록된 ID 입니다.");
         }
@@ -45,7 +48,7 @@ public class MemberService {
     // 로그인, 토큰 발행
     public TokenInfo login(LoginDto loginDto){
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getLoginId(), loginDto.getPassword());
+                new UsernamePasswordAuthenticationToken(loginDto.loginId(), loginDto.password());
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
@@ -60,6 +63,11 @@ public class MemberService {
         return member.toDto();
     }
 
-
+    // 내 정보 수정
+    public String save(MemberDtoRequest memberDtoRequest){
+        Member member = memberDtoRequest.toEntity();
+        memberRepository.save(member);
+        return "수정이 완료되었습니다.";
+    }
 
 }
