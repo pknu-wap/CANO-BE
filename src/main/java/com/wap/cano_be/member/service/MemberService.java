@@ -2,6 +2,7 @@ package com.wap.cano_be.member.service;
 
 import com.wap.cano_be.common.authority.JwtTokenProvider;
 import com.wap.cano_be.common.authority.TokenInfo;
+import com.wap.cano_be.common.exception.InvalidInputException;
 import com.wap.cano_be.member.dto.LoginDto;
 import com.wap.cano_be.member.dto.MemberDtoRequest;
 import com.wap.cano_be.member.dto.MemberDtoResponse;
@@ -58,7 +59,7 @@ public class MemberService {
     // 내 정보 조회
     public MemberDtoResponse searchMyInfo(Long id) {
         Member member = memberRepository.findById(id)
-                .orElseThrow(() -> new InvaildInputException("id", "회원번호: " + id + "는 존재하지 않는 유저입니다."));
+                .orElseThrow(() -> new InvalidInputException("id", "회원번호: " + id + "는 존재하지 않는 유저입니다."));
 
         return member.toDto();
     }
