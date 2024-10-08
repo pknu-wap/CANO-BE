@@ -24,4 +24,4 @@ CANO 애플리케이션 백엔드 리포지토리입니다.
 
 |  [박계현](https://github.com/gyehyun-bak) | [윤회성](https://github.com/squareCaaat) |
 | :-----------------------------------------: | :------------------------------------: |
-| <img src="https://github.com/gyehyun-bak.png" width="100"> | <img src="https://github.com/wlsgur11.png" width="100"> | <img src="https://github.com/janghw0126.png" width="100"> | <img src="https://github.com/squareCaaat.png" width="100"> | <img src="https://github.com/kllerredstark.png" width="100"> |
+| <img src="https://github.com/gyehyun-bak.png" width="100"> | <img src="https://github.com/squareCaaat.png" width="100"> |
