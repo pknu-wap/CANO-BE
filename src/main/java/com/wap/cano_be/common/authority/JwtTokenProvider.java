@@ -22,9 +22,10 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenProvider {
     // 토큰 만료 시간 (밀리초 단위)
-    private static final long EXPIRATION_MILLISECOND = 1000 * 60 * 30;
+    private static final long EXPIRATION_ACCESS_TOKEN_MILLISECOND = 1000 * 60 * 30L;
+    private static final long EXPIRATION_REFRESH_TOKEN_MILLISECOND = 1000 * 60 * 60 * 24L;
 
-    @Value("${jwt.secret}")
+    @Value(value = "${jwt.secret}")
     private String secretKey;
 
     private Key key;
@@ -34,25 +35,32 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
     }
 
+    // Access Token
+    public TokenInfo createAccessToken(Authentication authentication) {
+        return createToken(authentication, EXPIRATION_ACCESS_TOKEN_MILLISECOND);
+    }
+
+    // Refresh Token
+
     // Token 생성
-    public TokenInfo createToken(Authentication authentication) {
+    private TokenInfo createToken(Authentication authentication, long expireTime) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
         Date now = new Date();
-        Date accessExpiration = new Date(now.getTime() + EXPIRATION_MILLISECOND);
+        Date expiredDate = new Date(now.getTime() + expireTime);
 
         // Access Token 생성
-        String accessToken = Jwts.builder()
+        String token = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", authorities)
                 .claim("userId", (((CustomUser) authentication.getPrincipal()).getUserId()))
                 .setIssuedAt(now)
-                .setExpiration(accessExpiration)
+                .setExpiration(expiredDate)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
-        return new TokenInfo("Bearer", accessToken);
+        return new TokenInfo("Bearer", token);
     }
 
     // Token 정보 추출
