@@ -33,7 +33,7 @@ public record PrincipalDetails(
 
     @Override
     public String getPassword(){
-        return null;
+        return member.getPassword();
     }
 
     @Override
