@@ -40,6 +40,7 @@ public record MemberDtoRequest(
                         .name(name)
                         .loginId(loginId)
                         .email(email)
+                        .password(password)
                         .role(ROLE.MEMBER)
                         .profile(profile)
                         .build();
