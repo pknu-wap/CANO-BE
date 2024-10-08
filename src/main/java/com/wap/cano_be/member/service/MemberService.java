@@ -7,7 +7,9 @@ import com.wap.cano_be.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -40,6 +42,14 @@ public class MemberService {
         return "회원가입이 완료되었습니다.";
     }
 
+    // 로그인, 토큰 발행
+    public TokenInfo login(LoginDto loginDto){
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(loginDto.getLoginId(), loginDto.getPassword());
 
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        return jwtTokenProvider.createAccessToken(authentication);
+    }
 
 }
