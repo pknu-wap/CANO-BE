@@ -2,7 +2,6 @@ package com.wap.cano_be.common.dto;
 
 import com.wap.cano_be.common.status.ROLE;
 import com.wap.cano_be.member.entity.Member;
-import com.wap.cano_be.member.entity.MemberRole;
 import jakarta.security.auth.message.AuthException;
 import lombok.Builder;
 
@@ -46,7 +45,7 @@ public record OAuth2UserInfo(
                 .name(name)
                 .email(email)
                 .profile(profile)
-                .role(new MemberRole(ROLE.MEMBER, null))
+                .role(ROLE.MEMBER)
                 .build();
     }
 
