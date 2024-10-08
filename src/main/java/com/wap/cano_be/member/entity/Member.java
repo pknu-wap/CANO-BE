@@ -1,11 +1,16 @@
 package com.wap.cano_be.member.entity;
 
+import com.wap.cano_be.common.status.ROLE;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import net.minidev.json.annotate.JsonIgnore;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
 
 
 @Entity
@@ -15,7 +20,7 @@ import java.util.List;
         }
 )
 @Getter
-public class Member {
+public class Member implements UserDetails {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
@@ -33,19 +38,60 @@ public class Member {
     @Column(nullable = false, length = 30)
     private String email;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
-    private List<MemberRole> memberRoles = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ROLE role;
+
+    @JsonIgnore
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.toString()));
+    }
+
+    @Override
+    public String getUsername() {
+        return name;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
     public Member() {}
 
     @Builder
-    public Member(Long id, String loginId, String name, String profile, String password, String email, MemberRole role){
+    public Member(Long id, String loginId, String name, String profile, String password, String email, ROLE role){
         this.id = id;
         this.loginId = loginId;
         this.name = name;
         this.profile = profile;
         this.password = password;
         this.email = email;
-        memberRoles.add(role);
+        this.role = role;
     }
 }
