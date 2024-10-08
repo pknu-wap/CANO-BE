@@ -1,7 +1,6 @@
 package com.wap.cano_be.common.authority;
 
 import com.wap.cano_be.common.service.CustomOAuth2UserService;
-import jakarta.servlet.Filter;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -23,13 +22,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableMethodSecurity
 public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
-    private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final CustomOAuth2UserService oAuth2UserService;
 
     @Autowired
     public SecurityConfig(JwtTokenProvider jwtTokenProvider, OAuth2SuccessHandler oAuth2SuccessHandler, CustomOAuth2UserService oAuth2UserService) {
         this.jwtTokenProvider = jwtTokenProvider;
-        this.oAuth2SuccessHandler = oAuth2SuccessHandler;
         this.oAuth2UserService = oAuth2UserService;
     }
 
