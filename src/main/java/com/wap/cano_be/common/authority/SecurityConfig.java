@@ -65,8 +65,6 @@ public class SecurityConfig {
                 .oauth2Login(oauth -> oauth
                         // OAuth2 로그인 성공 시 사용자 정보 가져올 설정 담당
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
-                        // 로그인 성공 handler
-                        .successHandler(oAuth2SuccessHandler)
                 )
                 // jwt 설정
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
