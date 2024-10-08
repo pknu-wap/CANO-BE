@@ -35,7 +35,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer(){
         // error endpoint 열어줘야 함, favicon 마찬가지
         return web -> web.ignoring()
-                .requestMatchers("/error", "/favicon.ico");
+                .requestMatchers("/error", "/favicon.ico", "/images/**", "/h2-console/**", "/css/**", "/js/**");
     }
 
     @Bean
@@ -54,7 +54,7 @@ public class SecurityConfig {
                                 new AntPathRequestMatcher("/"),
                                 new AntPathRequestMatcher("/api/member/signup"),
                                 new AntPathRequestMatcher("/api/member/login"),
-                                new AntPathRequestMatcher("/api/auth/success")
+                                new AntPathRequestMatcher("/auth/success")
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
