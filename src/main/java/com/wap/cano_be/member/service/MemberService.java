@@ -16,13 +16,13 @@ import java.util.Optional;
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final AuthenticationManagerBuilder authenticationManager;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public MemberService(MemberRepository memberRepository, AuthenticationManagerBuilder authenticationManager, JwtTokenProvider jwtTokenProvider) {
+    public MemberService(MemberRepository memberRepository, AuthenticationManagerBuilder authenticationManagerBuilder, JwtTokenProvider jwtTokenProvider) {
         this.memberRepository = memberRepository;
-        this.authenticationManager = authenticationManager;
+        this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
