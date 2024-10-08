@@ -52,4 +52,14 @@ public class MemberService {
         return jwtTokenProvider.createAccessToken(authentication);
     }
 
+    // 내 정보 조회
+    public MemberDtoResponse searchMyInfo(Long id) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new InvaildInputException("id", "회원번호: " + id + "는 존재하지 않는 유저입니다."));
+
+        return member.toDto();
+    }
+
+
+
 }
