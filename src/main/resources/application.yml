@@ -2,4 +2,4 @@ spring:
   application:
     name: cano_be
   profiles:
-    include: oauth2
+    include: oauth2, database
