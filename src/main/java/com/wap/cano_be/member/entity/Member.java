@@ -1,5 +1,6 @@
 package com.wap.cano_be.member.entity;
 
+import com.wap.cano_be.common.status.Gender;
 import com.wap.cano_be.common.status.ROLE;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -37,6 +38,9 @@ public class Member implements UserDetails {
 
     @Column(nullable = false, length = 30)
     private String email;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -85,13 +89,14 @@ public class Member implements UserDetails {
     public Member() {}
 
     @Builder
-    public Member(Long id, String loginId, String name, String profile, String password, String email, ROLE role){
+    public Member(Long id, String loginId, String name, String profile, String password, String email, Gender gender, ROLE role){
         this.id = id;
         this.loginId = loginId;
         this.name = name;
         this.profile = profile;
         this.password = password;
         this.email = email;
+        this.gender = gender;
         this.role = role;
     }
 }
