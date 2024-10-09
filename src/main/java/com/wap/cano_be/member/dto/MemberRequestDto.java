@@ -42,7 +42,7 @@ public record MemberRequestDto(
                         .email(email)
                         .password(password)
                         .role(ROLE.MEMBER)
-                        .profile(profile)
+                        .profileImageUrl(profile)
                         .build();
         }
 }

@@ -87,10 +87,6 @@ public class Member implements UserDetails {
         return true;
     }
 
-    public MemberResponseDto toDto(){
-        return new MemberResponseDto(id, loginId, name, profileImageUrl, email);
-    }
-
     public Member() {}
 
     @Builder
