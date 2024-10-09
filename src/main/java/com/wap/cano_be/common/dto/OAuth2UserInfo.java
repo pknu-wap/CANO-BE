@@ -31,7 +31,7 @@ public record OAuth2UserInfo(
 
     private static OAuth2UserInfo ofKakao(Map<String, Object> attributes) {
         Map<String, Object> account = (Map<String, Object>) attributes.get("kakao_account");
-        Map<String, Object> profile = (Map<String, Object>) account.get("profile");
+        Map<String, Object> profile = (Map<String, Object>) account.get("profileImageUrl");
 
         return OAuth2UserInfo.builder()
                 .name((String) profile.get("nickname"))
@@ -44,7 +44,7 @@ public record OAuth2UserInfo(
         return Member.builder()
                 .name(name)
                 .email(email)
-                .profile(profile)
+                .profileImageUrl(profile)
                 .role(ROLE.MEMBER)
                 .build();
     }
