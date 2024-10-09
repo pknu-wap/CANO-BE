@@ -1,6 +1,6 @@
 package com.wap.cano_be.member.dto;
 
-public record MemberDtoResponse(
+public record MemberResponseDto(
         Long id,
         String loginId,
         String name,
