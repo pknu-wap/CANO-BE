@@ -2,7 +2,7 @@ package com.wap.cano_be.member.entity;
 
 import com.wap.cano_be.common.status.Gender;
 import com.wap.cano_be.common.status.ROLE;
-import com.wap.cano_be.member.dto.MemberDtoResponse;
+import com.wap.cano_be.member.dto.MemberResponseDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,7 +32,7 @@ public class Member implements UserDetails {
     @Column(nullable = false, length = 10)
     private String name;
 
-    private String profile;
+    private String profileImageUrl;
 
     @Column(nullable = false, length = 100)
     private String password;
@@ -87,18 +87,18 @@ public class Member implements UserDetails {
         return true;
     }
 
-    public MemberDtoResponse toDto(){
-        return new MemberDtoResponse(id, loginId, name, profile, email);
+    public MemberResponseDto toDto(){
+        return new MemberResponseDto(id, loginId, name, profileImageUrl, email);
     }
 
     public Member() {}
 
     @Builder
-    public Member(Long id, String loginId, String name, String profile, String password, String email, Gender gender, ROLE role){
+    public Member(Long id, String loginId, String name, String profileImageUrl, String password, String email, Gender gender, ROLE role){
         this.id = id;
         this.loginId = loginId;
         this.name = name;
-        this.profile = profile;
+        this.profileImageUrl = profileImageUrl;
         this.password = password;
         this.email = email;
         this.gender = gender;
