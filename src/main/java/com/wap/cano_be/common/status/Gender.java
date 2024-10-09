@@ -4,13 +4,13 @@ public enum Gender {
     MAN("남"),
     WOMAN("여");
 
-    private final String desc;
+    private final String _desc;
 
     Gender(String desc) {
-        this.desc = desc;
+        _desc = desc;
     }
 
-    public String getGender(){
-        return desc;
+    public String desc(){
+        return _desc;
     }
 }
