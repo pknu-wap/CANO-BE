@@ -2,7 +2,6 @@ package com.wap.cano_be.member.entity;
 
 import com.wap.cano_be.common.status.Gender;
 import com.wap.cano_be.common.status.ROLE;
-import com.wap.cano_be.member.dto.MemberResponseDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

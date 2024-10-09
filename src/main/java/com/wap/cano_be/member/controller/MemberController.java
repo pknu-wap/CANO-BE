@@ -36,7 +36,7 @@ public class MemberController {
     // 내 정보 조회
     @GetMapping("/info")
     public ResponseEntity<BaseResponse<MemberResponseDto>> searchMyInfo(@AuthenticationPrincipal CustomUser user){
-        long userId = user.getUserId();;
+        long userId = user.getUserId();
         return ResponseEntity.ok(memberService.searchMyInfo(userId));
     }
 }
