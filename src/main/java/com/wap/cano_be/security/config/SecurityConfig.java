@@ -65,36 +65,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-//        http.cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()));
-//
-//        http.csrf(AbstractHttpConfigurer::disable);
-//
-//        http.sessionManagement(httpSecuritySessionManagementConfigurer -> {
-//            httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//        });
-//
-//        http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
-//                authorizationManagerRequestMatcherRegistry.anyRequest().permitAll());
-//
-//        http.addFilterBefore(jwtVerifyFilter(), UsernamePasswordAuthenticationFilter.class);
-//
-////        http.formLogin(httpSecurityFormLoginConfigurer -> {httpSecurityFormLoginConfigurer
-////                        .loginPage("/login")
-////                        .successHandler(commonLoginSuccessHandler())
-////                        .failureHandler(commonLoginFailHandler());
-////        });
-//
-//        http.formLogin(AbstractHttpConfigurer::disable);
-//
-//        http.oauth2Login(httpSecurityOAuth2LoginConfigurer ->
-//                httpSecurityOAuth2LoginConfigurer
-////                        .loginPage("/oauth2/login")
-//                        .userInfoEndpoint(userInfoEndpointConfig ->
-//                                userInfoEndpointConfig.userService(oAuth2UserService))
-//                        .successHandler(commonLoginSuccessHandler()));
-
-
         http
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
