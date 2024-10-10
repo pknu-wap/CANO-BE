@@ -2,7 +2,7 @@ package com.wap.cano_be.member.service;
 
 import com.wap.cano_be.common.ResponseDto;
 import com.wap.cano_be.member.domain.Member;
-import com.wap.cano_be.member.domain.MemberDTO;
+import com.wap.cano_be.member.domain.MemberRequestDto;
 import com.wap.cano_be.member.domain.MemberResponseDto;
 import com.wap.cano_be.member.domain.MemberRole;
 import com.wap.cano_be.member.repository.MemberRepository;
@@ -12,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -28,11 +26,11 @@ public class MemberService {
         return memberRepository.findByEmail(email);
     }
 
-    public Member saveMember(MemberDTO memberDTO) {
+    public Member saveMember(MemberRequestDto memberRequestDto) {
         Member member = Member.builder()
-                .name(memberDTO.getName())
-                .email(memberDTO.getEmail())
-                .password(passwordEncoder.encode(memberDTO.getPassword()))
+                .name(memberRequestDto.name())
+                .email(memberRequestDto.email())
+                .password(passwordEncoder.encode(memberRequestDto.password()))
                 .role(MemberRole.USER).build();
         return memberRepository.save(member);
     }
