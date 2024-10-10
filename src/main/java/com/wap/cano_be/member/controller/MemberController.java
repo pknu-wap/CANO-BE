@@ -2,7 +2,8 @@ package com.wap.cano_be.member.controller;
 
 import com.wap.cano_be.common.ResponseDto;
 import com.wap.cano_be.member.domain.Member;
-import com.wap.cano_be.member.domain.MemberDTO;
+import com.wap.cano_be.member.domain.MemberRequestDto;
+import com.wap.cano_be.member.domain.MemberResponseDto;
 import com.wap.cano_be.member.domain.PrincipalDetail;
 import com.wap.cano_be.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -26,18 +25,17 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/signUp")
-    public Map<String, String> signUp(@RequestBody MemberDTO memberDTO) {
+    public ResponseEntity<ResponseDto> signUp(@RequestBody MemberRequestDto memberRequestDto) {
         log.info("--------------------------- MemberController ---------------------------");
-        log.info("memberDTO = {}", memberDTO);
-        Map<String, String> response = new HashMap<>();
-        Optional<Member> byEmail = memberService.findByEmail(memberDTO.getEmail());
+        log.info("memberDTO = {}", memberRequestDto);
+
+        Optional<Member> byEmail = memberService.findByEmail(memberRequestDto.email());
         if (byEmail.isPresent()) {
-            response.put("error", "이미 존재하는 이메일입니다");
+            return MemberResponseDto.duplicatedMember();
         } else {
-            memberService.saveMember(memberDTO);
-            response.put("success", "성공적으로 처리하였습니다");
+            memberService.saveMember(memberRequestDto);
         }
-        return response;
+        return ResponseEntity.ok().body(new ResponseDto());
     }
 
     @GetMapping("/user")
