@@ -9,7 +9,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,13 +26,21 @@ import java.util.Set;
 
 public class JwtUtils {
 
-    @Value("${jwt.secret}")
-    public static String secretKey;
 
+    @Value("${jwt.secret}")
+    private String secretKeyFromProperty;
+
+    private static String secretKey;
     private static Key key;
 
     @PostConstruct
     public void init() {
+        secretKey = secretKeyFromProperty;
+
+        if (secretKey.getBytes(StandardCharsets.UTF_8).length < 32) {
+            throw new IllegalArgumentException("Secret key must be at least 32 bytes");
+        }
+
         key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -43,11 +50,6 @@ public class JwtUtils {
     }
 
     public static String generateToken(Map<String, Object> valueMap, int validTime) {
-//        try {
-//
-//        } catch(Exception e){
-//            throw new RuntimeException(e.getMessage());
-//        }
         return Jwts.builder()
                 .setClaims(valueMap)
                 .setIssuedAt(Date.from(ZonedDateTime.now().toInstant()))
