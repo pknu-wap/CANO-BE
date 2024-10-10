@@ -1,4 +1,4 @@
-package ghkwhd.security.jwt.controller;
+package com.wap.cano_be.jwt.controller;
 
 import ghkwhd.security.jwt.exception.CustomJwtException;
 import ghkwhd.security.jwt.utils.JwtConstants;

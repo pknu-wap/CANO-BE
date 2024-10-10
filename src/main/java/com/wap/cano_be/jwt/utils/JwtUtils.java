@@ -1,4 +1,4 @@
-package ghkwhd.security.jwt.utils;
+package com.wap.cano_be.jwt.utils;
 
 import ghkwhd.security.jwt.exception.CustomExpiredJwtException;
 import ghkwhd.security.jwt.exception.CustomJwtException;
