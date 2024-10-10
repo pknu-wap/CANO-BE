@@ -67,7 +67,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
@@ -75,7 +75,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(httpRequest -> httpRequest
-                        .requestMatchers("/", "/oauth2/**").permitAll()
+                        .requestMatchers("/", "/oauth2/**","/login/**", "/signup/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
