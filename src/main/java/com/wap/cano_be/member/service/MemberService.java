@@ -1,11 +1,14 @@
 package com.wap.cano_be.member.service;
 
+import com.wap.cano_be.common.ResponseDto;
 import com.wap.cano_be.member.domain.Member;
 import com.wap.cano_be.member.domain.MemberDTO;
+import com.wap.cano_be.member.domain.MemberResponseDto;
 import com.wap.cano_be.member.domain.MemberRole;
 import com.wap.cano_be.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,18 +37,14 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-    public Map<String, String > findMyInfo(String email) {
+    public ResponseEntity<ResponseDto> findMyInfo(String email) {
         Optional<Member> member = memberRepository.findByEmail(email);
-        Map<String, String> response = new HashMap<>();
+
         if(member.isEmpty()){
-            response.put("Error", "user not found");
-            return response;
+            return MemberResponseDto.noSuchUser();
         }
 
-        response.put("name", member.get().getName());
-        response.put("email", member.get().getEmail());
-        response.put("socialId", member.get().getSocialId());
-        response.put("profile", member.get().getProfileImageUrl());
-        return response;
+        MemberResponseDto responseDto = new MemberResponseDto(member.get().getName(), member.get().getEmail(), member.get().getSocialId(), member.get().getProfileImageUrl());
+        return ResponseEntity.ok().body(responseDto);
     }
 }
