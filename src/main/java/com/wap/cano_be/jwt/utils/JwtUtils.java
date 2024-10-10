@@ -1,10 +1,10 @@
 package com.wap.cano_be.jwt.utils;
 
-import ghkwhd.security.jwt.exception.CustomExpiredJwtException;
-import ghkwhd.security.jwt.exception.CustomJwtException;
-import ghkwhd.security.member.domain.Member;
-import ghkwhd.security.member.domain.MemberRole;
-import ghkwhd.security.member.domain.PrincipalDetail;
+import com.wap.cano_be.jwt.exception.CustomExpiredJwtException;
+import com.wap.cano_be.jwt.exception.CustomJwtException;
+import com.wap.cano_be.member.domain.Member;
+import com.wap.cano_be.member.domain.MemberRole;
+import com.wap.cano_be.member.domain.PrincipalDetail;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -17,7 +17,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.ZonedDateTime;

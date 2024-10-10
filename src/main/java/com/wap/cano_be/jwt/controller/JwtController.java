@@ -1,8 +1,8 @@
 package com.wap.cano_be.jwt.controller;
 
-import ghkwhd.security.jwt.exception.CustomJwtException;
-import ghkwhd.security.jwt.utils.JwtConstants;
-import ghkwhd.security.jwt.utils.JwtUtils;
+import com.wap.cano_be.jwt.exception.CustomJwtException;
+import com.wap.cano_be.jwt.utils.JwtConstants;
+import com.wap.cano_be.jwt.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestHeader;
