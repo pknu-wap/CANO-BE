@@ -1,11 +1,13 @@
 package com.wap.cano_be.member.controller;
 
+import com.wap.cano_be.common.ResponseDto;
 import com.wap.cano_be.member.domain.Member;
 import com.wap.cano_be.member.domain.MemberDTO;
 import com.wap.cano_be.member.domain.PrincipalDetail;
 import com.wap.cano_be.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +41,7 @@ public class MemberController {
     }
 
     @GetMapping("/user")
-    public Map<String, String> user(@AuthenticationPrincipal PrincipalDetail principalDetail) {
+    public ResponseEntity<ResponseDto> user(@AuthenticationPrincipal PrincipalDetail principalDetail) {
         String email = principalDetail.getName();
         return memberService.findMyInfo(email);
     }
