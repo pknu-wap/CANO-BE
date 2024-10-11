@@ -22,4 +22,6 @@ public class Member {
     private String profileImageUrl;
     @Enumerated(EnumType.STRING)
     private MemberRole role;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 }
