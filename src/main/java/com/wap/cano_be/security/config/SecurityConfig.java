@@ -78,12 +78,12 @@ public class SecurityConfig {
                         .requestMatchers("/", "/oauth2/**","/login/**", "/signup/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .oauth2Login(oauth2 -> oauth2
-                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
-                                .userService(oAuth2UserService)
-                        )
-                        .successHandler(commonLoginSuccessHandler())
-                )
+//                .oauth2Login(oauth2 -> oauth2
+//                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
+//                                .userService(oAuth2UserService)
+//                        )
+//                        .successHandler(commonLoginSuccessHandler())
+//                )
                 .addFilterBefore(jwtVerifyFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
