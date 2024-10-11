@@ -2,9 +2,11 @@ package com.wap.cano_be.oauth2.user;
 
 import jakarta.security.auth.message.AuthException;
 import lombok.Builder;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
+@Slf4j
 @Builder
 public record OAuth2UserInfo(
         String socialId,
@@ -30,12 +32,15 @@ public record OAuth2UserInfo(
     }
 
     private static OAuth2UserInfo ofKakao(Map<String, Object> attributes){
+        log.info("---------OAuth2UserInfo-------------");
         Map<String, Object> account = (Map<String, Object>) attributes.get("kakao_account");
-        Map<String, Object> profile = (Map<String, Object>) attributes.get("kakao_profile");
+        log.info("kakao account = {}", account);
+        Map<String, Object> profile = (Map<String, Object>) account.get("profile");
+        log.info("kakao profile = {}", profile);
         return OAuth2UserInfo.builder()
-                .socialId((String) attributes.get("id"))
+                .socialId(String.valueOf(attributes.get("id")))
                 .name((String) profile.get("nickname"))
-                .email((String) account.get("email"))
+//                .email((String) account.get("email"))
                 .profileImageUrl((String) profile.get("picture"))
                 .build();
     }
