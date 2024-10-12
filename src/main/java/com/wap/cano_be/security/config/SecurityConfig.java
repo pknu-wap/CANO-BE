@@ -2,8 +2,6 @@ package com.wap.cano_be.security.config;
 
 import com.wap.cano_be.jwt.filter.JwtVerifyFilter;
 import com.wap.cano_be.oauth2.service.OAuth2UserService;
-import com.wap.cano_be.security.handler.CommonLoginFailHandler;
-import com.wap.cano_be.security.handler.CommonLoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,16 +47,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CommonLoginSuccessHandler commonLoginSuccessHandler() {
-        return new CommonLoginSuccessHandler();
-    }
-
-    @Bean
-    public CommonLoginFailHandler commonLoginFailHandler() {
-        return new CommonLoginFailHandler();
-    }
-
-    @Bean
     public JwtVerifyFilter jwtVerifyFilter() {
         return new JwtVerifyFilter();
     }
@@ -75,15 +63,9 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(httpRequest -> httpRequest
-                        .requestMatchers("/", "/oauth2/**","/login/**", "/signup/**").permitAll()
+                        .requestMatchers("/", "/oauth2/**","/login/**", "/signup/**", "/api/auth/**", "/error/**").permitAll()
                         .anyRequest().authenticated()
                 )
-//                .oauth2Login(oauth2 -> oauth2
-//                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
-//                                .userService(oAuth2UserService)
-//                        )
-//                        .successHandler(commonLoginSuccessHandler())
-//                )
                 .addFilterBefore(jwtVerifyFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
