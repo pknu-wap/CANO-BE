@@ -1,20 +1,22 @@
 package com.wap.cano_be.common;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+@Getter
 public class ResponseDto {
-    private String responseCode;
-    private String responseMessage;
+    private String code;
+    private String message;
 
     public ResponseDto(){
-        this.responseCode = ResponseCode.SUCCESS.name();
-        this.responseMessage = ResponseCode.SUCCESS.message();
+        this.code = ResponseCode.SUCCESS.name();
+        this.message = ResponseCode.SUCCESS.message();
     }
 
-    public ResponseDto(String responseCode, String responseMessage){
-        this.responseCode = responseCode;
-        this.responseMessage = responseMessage;
+    public ResponseDto(String code, String message){
+        this.code = code;
+        this.message = message;
     }
 
     public static ResponseEntity<ResponseDto> databaseError() {
@@ -23,7 +25,7 @@ public class ResponseDto {
     }
 
     public static ResponseEntity<ResponseDto> validationFail(){
-        ResponseDto responseDto = new ResponseDto(ResponseCode.VALIDATION_FAILED.name(), ResponseCode.VALIDATION_FAILED.message());
+        ResponseDto responseDto = new ResponseDto(ResponseCode.VALIDATION_FAIL.name(), ResponseCode.VALIDATION_FAIL.message());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDto);
     }
 

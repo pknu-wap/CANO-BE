@@ -1,4 +1,4 @@
-package com.wap.cano_be.oauth2.user;
+package com.wap.cano_be.oauth2.dto;
 
 import jakarta.security.auth.message.AuthException;
 import lombok.Builder;
@@ -31,12 +31,15 @@ public record OAuth2UserInfo(
 
     private static OAuth2UserInfo ofKakao(Map<String, Object> attributes){
         Map<String, Object> account = (Map<String, Object>) attributes.get("kakao_account");
-        Map<String, Object> profile = (Map<String, Object>) attributes.get("kakao_profile");
+        if(account == null){
+            return null;
+        }
+        Map<String, Object> profile = (Map<String, Object>) account.get("profile");
         return OAuth2UserInfo.builder()
-                .socialId((String) attributes.get("id"))
+                .socialId(String.valueOf(attributes.get("id")))
                 .name((String) profile.get("nickname"))
                 .email((String) account.get("email"))
-                .profileImageUrl((String) profile.get("picture"))
+                .profileImageUrl((String) profile.get("profile_image_url"))
                 .build();
     }
 }

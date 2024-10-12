@@ -4,7 +4,7 @@ import com.wap.cano_be.member.domain.Member;
 import com.wap.cano_be.member.domain.MemberRole;
 import com.wap.cano_be.member.domain.PrincipalDetail;
 import com.wap.cano_be.member.repository.MemberRepository;
-import com.wap.cano_be.oauth2.user.OAuth2UserInfo;
+import com.wap.cano_be.oauth2.dto.OAuth2UserInfo;
 import jakarta.security.auth.message.AuthException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

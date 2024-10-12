@@ -2,8 +2,8 @@ package com.wap.cano_be.member.service;
 
 import com.wap.cano_be.common.ResponseDto;
 import com.wap.cano_be.member.domain.Member;
-import com.wap.cano_be.member.domain.MemberRequestDto;
-import com.wap.cano_be.member.domain.MemberResponseDto;
+import com.wap.cano_be.member.dto.MemberRequestDto;
+import com.wap.cano_be.member.dto.MemberResponseDto;
 import com.wap.cano_be.member.domain.MemberRole;
 import com.wap.cano_be.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
