@@ -103,7 +103,6 @@ public class JwtUtils {
     }
 
     private static Claims getClaims(String token){
-//        Key key = Keys.hmacShaKeyFor(JwtUtils.secretKey.getBytes(StandardCharsets.UTF_8));
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
