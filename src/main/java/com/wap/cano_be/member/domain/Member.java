@@ -20,8 +20,12 @@ public class Member {
     private String name;
     private String socialId;
     private String profileImageUrl;
+    private String providerId;
     @Enumerated(EnumType.STRING)
     private MemberRole role;
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @OneToOne
+    private RefreshToken refreshToken;
 }
