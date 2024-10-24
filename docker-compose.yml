@@ -1,0 +1,39 @@
+services:
+  db:
+    image: mysql
+    container_name: cano-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password123
+      MYSQL_DATABASE: cano
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - cano-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping" ] # MySQL이 healthy 한 지 판단할 수 있는 명령어
+      interval: 5s # 5초 간격으로 체크
+      retries: 10 # 10번까지 재시도
+
+  app:
+    image: cano-server:latest
+    container_name: cano-server
+    depends_on:
+      - db:
+          condition: service-healthy
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/cano
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password123
+    networks:
+      - cano-network
+
+networks:
+  cano-network:
+    driver: bridge
+
+volumes:
+  db_data:

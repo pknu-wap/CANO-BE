@@ -52,7 +52,6 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: true
           script: |
-            docker stop cano-server || true
-            docker rm cano-server || true
-            docker pull ${{ steps.login-ecr.outputs.registry }}/cano-server:latest
-            docker run -d --name cano-server -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/cano-server:latest
+            docker-compose down || true # 기존 컨테이너 중지 및 제거
+            docker-compose pull # ECR에서 최신 이미지를 가져오기
+            docker-compose up -d # 새로운 컨테이너 실행
