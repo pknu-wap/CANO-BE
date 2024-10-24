@@ -1,32 +1,92 @@
-version: '3.8'
+name: Deploy To EC2
 
-services:
-  mysql:
-    image: mysql:5.7
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: password123  # root 비밀번호 설정
-      MYSQL_DATABASE: cano
-      MYSQL_USER: root  # MySQL 유저 설정
-      MYSQL_PASSWORD: password123  # root 비밀번호 설정
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql-data:/var/lib/mysql  # Docker Volume 사용
+on:
+  push:
+    branches:
+      - main
 
-  springboot-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: always
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/cano
-      SPRING_DATASOURCE_USERNAME: root  # root 유저로 연결
-      SPRING_DATASOURCE_PASSWORD: password123  # 비밀번호 설정
-    ports:
-      - "8080:8080"
-    depends_on:
-      - mysql
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Github Repository 파일 불러오기
+        uses: actions/checkout@v4
 
-volumes:
-  mysql-data:  # Docker Volume 정의
+      - name: JDK 17버전 설치
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: application.yml 파일 만들기
+        run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.yml
+
+      - name: 테스트 및 빌드하기
+        run: |
+          chmod +x ./gradlew
+          ./gradlew clean build -x test
+
+      - name: AWS Resource에 접근할 수 있게 AWS credentials 설정
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ap-northeast-2
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: ECR에 로그인하기
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Docker 이미지 생성
+        run: docker build -t cano-server .
+
+      - name: Docker 이미지에 Tag 붙이기
+        run: docker tag cano-server ${{ steps.login-ecr.outputs.registry }}/cano-server:latest
+
+      - name: ECR에 Docker 이미지 Push하기
+        run: docker push ${{ steps.login-ecr.outputs.registry }}/cano-server:latest
+
+      - name: SSH로 EC2에 접속하기
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          script_stop: true
+          script: |
+            # 네트워크 생성
+            docker network create cano-network || true
+            
+            # MySQL 컨테이너 중지 및 삭제
+            docker stop mysql-container || true
+            docker rm mysql-container || true
+            
+            # MySQL 이미지 풀
+            docker pull mysql:5.7
+            
+            # MySQL 컨테이너 실행
+            docker run -d --name mysql-container \
+              --network cano-network \  # 네트워크 지정
+              -e MYSQL_ROOT_PASSWORD=password123 \
+              -e MYSQL_DATABASE=cano \
+              -e MYSQL_USER=root \
+              -e MYSQL_PASSWORD=password123 \
+              -v mysql-data:/var/lib/mysql \
+              -p 3306:3306 \
+              mysql:5.7
+            
+            # 기존 Spring Boot 컨테이너 중지 및 삭제
+            docker stop cano-server || true
+            docker rm cano-server || true
+            
+            # Spring Boot 이미지 풀
+            docker pull ${{ steps.login-ecr.outputs.registry }}/cano-server:latest
+            
+            # Spring Boot 컨테이너 실행
+            docker run -d --name cano-server \
+              --network cano-network \  # 네트워크 지정
+              -p 8080:8080 \
+              -e SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/cano \  # MySQL 컨테이너 이름으로 수정
+              -e SPRING_DATASOURCE_USERNAME=root \
+              -e SPRING_DATASOURCE_PASSWORD=password123 \
+              ${{ steps.login-ecr.outputs.registry }}/cano-server:latest
