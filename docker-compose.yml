@@ -5,14 +5,14 @@ services:
     image: mysql:5.7
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: password123  # root 비밀번호 설정
+      MYSQL_ROOT_PASSWORD: password123
       MYSQL_DATABASE: cano
-      MYSQL_USER: root  # MySQL 유저 설정
-      MYSQL_PASSWORD: password123  # root 비밀번호 설정
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password123
     ports:
       - "3306:3306"
     volumes:
-      - mysql-data:/var/lib/mysql  # Docker Volume 사용
+      - mysql-data:/var/lib/mysql
 
   springboot-app:
     build:
@@ -21,12 +21,12 @@ services:
     restart: always
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/cano
-      SPRING_DATASOURCE_USERNAME: root  # root 유저로 연결
-      SPRING_DATASOURCE_PASSWORD: password123  # 비밀번호 설정
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password123
     ports:
       - "8080:8080"
     depends_on:
       - mysql
 
 volumes:
-  mysql-data:  # Docker Volume 정의
+  mysql-data:
