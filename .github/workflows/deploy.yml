@@ -24,7 +24,7 @@ jobs:
       - name: 테스트 및 빌드하기
         run: |
           chmod +x ./gradlew
-          ./gradlew clean build -x test
+          ./gradlew clean build
 
       - name: AWS Resource에 접근할 수 있게 AWS credentials 설정
         uses: aws-actions/configure-aws-credentials@v4
@@ -54,7 +54,11 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: true
           script: |
-            docker stop cano-server || true
-            docker rm cano-server || true
-            docker pull ${{ steps.login-ecr.outputs.registry }}/cano-server:latest
-            docker run -d --name cano-server --network cano-network -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/cano-server:latest
+            cd /cano-server
+            docker compose down || true
+            docker compose pull
+            docker compose up -d
+#            docker stop cano-server || true
+#            docker rm cano-server || true
+#            docker pull ${{ steps.login-ecr.outputs.registry }}/cano-server:latest
+#            docker run -d --name cano-server -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/cano-server:latest

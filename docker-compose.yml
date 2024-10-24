@@ -1,0 +1,22 @@
+services:
+  cano-server:
+    image: 992382507226.dkr.ecr.ap-northeast-2.amazonaws.com/cano-server
+    ports:
+      - 8080:8080
+    depends_on:
+      - my-db:
+          condition: service_healthy
+
+  my-db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password123
+      MYSQL_DATABASE: cano
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    ports:
+      - 3306:3306
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping" ]
+      interval: 5s
+      retries: 10
