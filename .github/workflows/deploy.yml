@@ -86,7 +86,4 @@ jobs:
             docker run -d --name cano-server \
               --network cano-network \  # 네트워크 지정
               -p 8080:8080 \
-              -e SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/cano \  # MySQL 컨테이너 이름으로 수정
-              -e SPRING_DATASOURCE_USERNAME=root \
-              -e SPRING_DATASOURCE_PASSWORD=password123 \
               ${{ steps.login-ecr.outputs.registry }}/cano-server:latest
