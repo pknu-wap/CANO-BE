@@ -54,7 +54,7 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: true
           script: |
-            cd /cano-server
+            cd /home/ubuntu/cano-server
             docker compose pull
             docker compose up --build -d
 #            docker stop cano-server || true
