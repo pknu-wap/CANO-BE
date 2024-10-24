@@ -54,39 +54,7 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: true
           script: |
-            # 네트워크 생성 (이미 존재할 경우 무시)
-            docker network create cano-network || echo "Network already exists"
-
-            # MySQL 컨테이너 중지 및 삭제
-            docker stop mysql-container || true
-            docker rm mysql-container || true
-
-            # MySQL 이미지 풀
-            docker pull mysql:5.7
-
-            # MySQL 컨테이너 실행
-            docker run -d --name mysql-container \
-              --network cano-network \  # 네트워크 지정
-              -e MYSQL_ROOT_PASSWORD=password123 \
-              -e MYSQL_DATABASE=cano \
-              -e MYSQL_USER=root \
-              -e MYSQL_PASSWORD=password123 \
-              -v mysql-data:/var/lib/mysql \
-              -p 3306:3306 \
-              mysql:5.7
-
-            # 기존 Spring Boot 컨테이너 중지 및 삭제
             docker stop cano-server || true
             docker rm cano-server || true
-
-            # Spring Boot 이미지 풀
             docker pull ${{ steps.login-ecr.outputs.registry }}/cano-server:latest
-
-            # Spring Boot 컨테이너 실행
-            docker run -d --name cano-server \
-              --network cano-network \  # 네트워크 지정
-              -p 8080:8080 \
-              -e SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/cano \  # MySQL 컨테이너 이름으로 수정
-              -e SPRING_DATASOURCE_USERNAME=root \
-              -e SPRING_DATASOURCE_PASSWORD=password123 \
-              ${{ steps.login-ecr.outputs.registry }}/cano-server:latest
+            docker run -d --name cano-server --network cano-network -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/cano-server:latest
