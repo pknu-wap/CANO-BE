@@ -55,9 +55,8 @@ jobs:
           script_stop: true
           script: |
             cd /cano-server
-            docker compose down || true
             docker compose pull
-            docker compose up -d
+            docker compose up --build -d
 #            docker stop cano-server || true
 #            docker rm cano-server || true
 #            docker pull ${{ steps.login-ecr.outputs.registry }}/cano-server:latest
