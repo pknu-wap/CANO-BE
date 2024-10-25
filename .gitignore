@@ -36,6 +36,7 @@ out/
 ### VS Code ###
 .vscode/
 
+application.yml
 application.properties
 application-mysql.properties
 application-oauth2.properties
