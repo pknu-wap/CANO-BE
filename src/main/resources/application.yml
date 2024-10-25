@@ -1,0 +1,43 @@
+#spring:
+#  application:
+#    name: cano_be
+#
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://my-db:3306/cano
+#    username: root
+#    password: password123
+#
+#  jpa:
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:
+#        format_sql: true
+#
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            client-id: 56066885888-ee3vl77rlukrnqgqgvebfaupr21dioaf.apps.googleusercontent.com
+#            client-secret: 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
+#            scope: email, profile
+#          kakao:
+#            client-id: 1c33d8ac6fd7c6ce55e22d347283a125
+#            client-secret: sdSh3EGYVclDWky4ic6GxukzxZKvJa5J
+#            client-authentication-method: client_secret_post
+#            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+#            authorization-grant-type: authorization_code
+#            client-name: kakao
+#            scope: profile_nickname, profile_image
+#        provider:
+#          kakao:
+#            authorization-uri: https://kauth.kakao.com/oauth/authorize
+#            token-uri: https://kauth.kakao.com/oauth/token
+#            user-info-uri: https://kapi.kakao.com/v2/user/me
+#            user-name-attribute: id
+#
+#jwt:
+#  secret: 55cbf60c7676aff2d761f92220655e4eecea9cc156c219900ee384935c427407
