@@ -9,13 +9,19 @@ import com.wap.cano_be.member.domain.MemberRole;
 import com.wap.cano_be.oauth2.dto.OAuth2LoginDto;
 import com.wap.cano_be.oauth2.dto.OAuth2UserResponseDto;
 import com.wap.cano_be.member.repository.MemberRepository;
+import com.wap.cano_be.oauth2.dto.TestLoginDto;
 import com.wap.cano_be.oauth2.service.OAuth2LoginService;
 import com.wap.cano_be.oauth2.dto.OAuth2UserInfo;
 import jakarta.security.auth.message.AuthException;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.HashMap;
@@ -134,4 +140,25 @@ public class KakaoOAuth2LoginService implements OAuth2LoginService {
         return memberRepository.save(newMember);
     }
 
+    @Override
+    public JSONObject getUserInfo(TestLoginDto requestDto) {
+        log.info("token: " + requestDto.getToken());
+        final String KAKAO_USER_INFO_URL = "https://kapi.kakao.com/v2/user/me";
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + requestDto.getToken());
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                KAKAO_USER_INFO_URL,
+                HttpMethod.POST,
+                entity,
+                String.class
+        );
+
+        log.info("response: " + response.getBody());
+
+        return new JSONObject(response.getBody());
+    }
 }
