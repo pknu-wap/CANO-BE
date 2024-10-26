@@ -7,5 +7,5 @@ import org.springframework.http.ResponseEntity;
 
 public interface OAuth2LoginService<T> {
     ResponseEntity<T> oauth2Login(OAuth2LoginDto oAuth2LoginDto);
-    JsonObject getUserInfo(TestLoginDto requestDto);
+    JsonObject getUserInfoFromToken(TestLoginDto requestDto);
 }

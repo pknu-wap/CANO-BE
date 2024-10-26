@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.wap.cano_be.dto.oauth2.TestLoginDto;
 import com.wap.cano_be.service.impl.KakaoOAuth2LoginService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,8 +18,7 @@ public class OAuth2TestController {
     }
 
     @PostMapping("/oauth2/login/kakao")
-    public String getUserInfo(@RequestBody TestLoginDto requestDto) {
-        JsonObject userInfo = oAuth2LoginService.getUserInfo(requestDto);
-        return userInfo.toString();
+    public ResponseEntity<?> getUserInfo(@RequestBody TestLoginDto requestDto) {
+        return oAuth2LoginService.kakaoLogin(requestDto);
     }
 }
