@@ -1,7 +1,7 @@
 package com.wap.cano_be.config;
 
 import com.wap.cano_be.security.JwtVerifyFilter;
-import com.wap.cano_be.service.OAuth2UserService;
+import com.wap.cano_be.service.impl.OAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

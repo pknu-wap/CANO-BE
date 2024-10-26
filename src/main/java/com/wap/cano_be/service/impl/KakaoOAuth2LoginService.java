@@ -1,5 +1,7 @@
 package com.wap.cano_be.service.impl;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.wap.cano_be.common.ResponseCode;
 import com.wap.cano_be.common.ResponseDto;
 import com.wap.cano_be.security.JwtConstants;
@@ -14,7 +16,6 @@ import com.wap.cano_be.service.OAuth2LoginService;
 import com.wap.cano_be.dto.oauth2.OAuth2UserInfo;
 import jakarta.security.auth.message.AuthException;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -141,7 +142,7 @@ public class KakaoOAuth2LoginService implements OAuth2LoginService {
     }
 
     @Override
-    public JSONObject getUserInfo(TestLoginDto requestDto) {
+    public JsonObject getUserInfo(TestLoginDto requestDto) {
         log.info("token: " + requestDto.getToken());
         final String KAKAO_USER_INFO_URL = "https://kapi.kakao.com/v2/user/me";
 
@@ -159,6 +160,8 @@ public class KakaoOAuth2LoginService implements OAuth2LoginService {
 
         log.info("response: " + response.getBody());
 
-        return new JSONObject(response.getBody());
+        Gson gson = new Gson();
+
+        return gson.fromJson(response.getBody(), JsonObject.class);
     }
 }

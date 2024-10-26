@@ -1,4 +1,4 @@
-package com.wap.cano_be.service;
+package com.wap.cano_be.service.impl;
 
 import com.wap.cano_be.common.ResponseDto;
 import com.wap.cano_be.domain.Member;
