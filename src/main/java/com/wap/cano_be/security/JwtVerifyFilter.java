@@ -19,7 +19,7 @@ import java.util.Map;
 @Slf4j
 public class JwtVerifyFilter extends OncePerRequestFilter {
 
-    private static final String[] whitelist = {"/signUp", "/login" , "/refresh", "/", "/index.html", "/oauth2/**", "/login/**", "/signup/**", "/api/auth", "/api/auth/login", "/error"};
+    private static final String[] whitelist = {"/signUp", "/login" , "/refresh", "/", "/index.html", "/oauth2/*", "/login/*", "/signup", "/api/auth/*", "/api/auth/login", "/error"};
 
     private static void checkAuthorizationHeader(String header) {
         if(header == null) {
