@@ -108,12 +108,11 @@ public class KakaoOAuth2LoginService implements OAuth2LoginService {
         }
         String refreshToken = JwtUtils.generateToken(attributes, JwtConstants.REFRESH_EXP_TIME);
 
-        return ResponseEntity.ok().body(OAuth2UserResponseDto.builder()
+        return ResponseEntity.ok().header(JwtConstants.JWT_HEADER, accessToken).body(OAuth2UserResponseDto.builder()
                         .name(kakaoUserInfo.name())
                         .email(kakaoUserInfo.email())
                         .socialId(kakaoUserInfo.socialId())
                         .profileImageUrl(kakaoUserInfo.profileImageUrl())
-                        .accessToken(accessToken)
                         .refreshToken(refreshToken)
                         .build());
 
