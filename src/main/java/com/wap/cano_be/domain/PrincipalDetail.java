@@ -3,14 +3,13 @@ package com.wap.cano_be.domain;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class PrincipalDetail implements UserDetails, OAuth2User {
+public class PrincipalDetail implements UserDetails {
 
     private Member member;
     private Collection<? extends GrantedAuthority> authorities;
@@ -41,14 +40,8 @@ public class PrincipalDetail implements UserDetails, OAuth2User {
         return info;
     }
 
-    @Override
     public String getName() {
         return member.getEmail();
-    }
-
-    @Override
-    public Map<String, Object> getAttributes() {
-        return attributes;
     }
 
     @Override
