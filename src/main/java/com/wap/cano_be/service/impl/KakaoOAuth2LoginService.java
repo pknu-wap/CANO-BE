@@ -4,6 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.wap.cano_be.common.ResponseCode;
 import com.wap.cano_be.common.ResponseDto;
+import com.wap.cano_be.domain.PrincipalDetail;
+import com.wap.cano_be.domain.RefreshToken;
+import com.wap.cano_be.repository.RefreshTokenRepository;
 import com.wap.cano_be.security.JwtConstants;
 import com.wap.cano_be.security.JwtUtils;
 import com.wap.cano_be.domain.Member;
@@ -21,10 +24,12 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -34,13 +39,15 @@ import java.util.Optional;
 public class KakaoOAuth2LoginService implements OAuth2LoginService {
     private final WebClient webClient;
     private final MemberRepository memberRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     private Map<String, Object> attributes = new HashMap<>();
 
     @Autowired
-    public KakaoOAuth2LoginService(WebClient.Builder weCliendBuilder, MemberRepository memberRepository) {
+    public KakaoOAuth2LoginService(WebClient.Builder weCliendBuilder, MemberRepository memberRepository, RefreshTokenRepository refreshTokenRepository) {
         this.webClient = weCliendBuilder.baseUrl("https://kapi.kakao.com").build();
         this.memberRepository = memberRepository;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
     private void fetchAttributes(OAuth2LoginDto oAuth2LoginDto) {
@@ -106,24 +113,15 @@ public class KakaoOAuth2LoginService implements OAuth2LoginService {
         if(accessToken.isEmpty()){
             return ResponseEntity.internalServerError().body(new ResponseDto(ResponseCode.VALIDATION_FAIL.name(), "Jwt 토큰이 정상적으로 생성되지 않았습니다."));
         }
-        String refreshToken = JwtUtils.generateToken(attributes, JwtConstants.REFRESH_EXP_TIME);
 
-        return ResponseEntity.ok().header(JwtConstants.JWT_HEADER, accessToken).body(OAuth2UserResponseDto.builder()
-                        .name(kakaoUserInfo.name())
-                        .email(kakaoUserInfo.email())
-                        .socialId(kakaoUserInfo.socialId())
-                        .profileImageUrl(kakaoUserInfo.profileImageUrl())
-                        .refreshToken(refreshToken)
-                        .build());
+        RefreshToken refreshToken = new RefreshToken(JwtUtils.generateToken(attributes, JwtConstants.REFRESH_EXP_TIME));
+        refreshTokenRepository.save(refreshToken);
 
-//        Member member = findUser.orElseGet(() -> saveSocialMember(finalKakaoUserInfo));
-//
-//        PrincipalDetail kakaoUserPrincipal =
-//                new PrincipalDetail(member, Collections.singleton(new SimpleGrantedAuthority(member.getRole().getValue())), attributes);
-//
-//        return ResponseEntity.ok()
-//                .header(JwtConstants.JWT_HEADER, JwtUtils.generateToken(attributes, JwtConstants.ACCESS_EXP_TIME))
-//                .body(new OAuthUserInfoResponseDto((Map<String, Object>) kakaoUserPrincipal));
+        Member member = findUser.orElseGet(() -> saveSocialMember(finalKakaoUserInfo));
+        PrincipalDetail kakaoUserPrincipal =
+                new PrincipalDetail(member, Collections.singleton(new SimpleGrantedAuthority(member.getRole().getValue())), attributes);
+
+        return ResponseEntity.ok().header(JwtConstants.JWT_HEADER, accessToken).body(new ResponseDto());
     }
 
     // 소셜 ID 로 가입된 사용자가 없으면 새로운 사용자를 만들어 저장한다
