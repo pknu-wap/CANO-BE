@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.wap.cano_be.common.ResponseCode;
 import com.wap.cano_be.common.ResponseDto;
-import com.wap.cano_be.domain.PrincipalDetail;
 import com.wap.cano_be.domain.RefreshToken;
 import com.wap.cano_be.repository.RefreshTokenRepository;
 import com.wap.cano_be.security.JwtConstants;
@@ -24,12 +23,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -113,18 +110,27 @@ public class KakaoOAuth2LoginService implements OAuth2LoginService {
         OAuth2UserInfo finalKakaoUserInfo = kakaoUserInfo;
 
         log.info("Token generate");
-        String accessToken = JwtUtils.generateToken(attributes, JwtConstants.ACCESS_EXP_TIME);
+
+        Map<String, Object> account = (Map<String, Object>) attributes.get("kakao_account");
+        Map<String, Object> profile = (Map<String, Object>) account.get("profile");
+        Map<String, Object> claim = new HashMap<>();
+
+        claim.put("id", attributes.get("id"));
+        claim.put("name", profile.get("nickname"));
+        claim.put("email", account.get("email"));
+
+        String accessToken = JwtUtils.generateToken(claim, JwtConstants.ACCESS_EXP_TIME);
         log.info("access token = {}", accessToken);
         if(accessToken.isEmpty()){
             return ResponseEntity.internalServerError().body(new ResponseDto(ResponseCode.VALIDATION_FAIL.name(), "Jwt 토큰이 정상적으로 생성되지 않았습니다."));
         }
 
-        RefreshToken refreshToken = new RefreshToken(JwtUtils.generateToken(attributes, JwtConstants.REFRESH_EXP_TIME));
+        RefreshToken refreshToken = new RefreshToken(JwtUtils.generateToken(claim, JwtConstants.REFRESH_EXP_TIME));
         refreshTokenRepository.save(refreshToken);
 
         Member member = findUser.orElseGet(() -> saveSocialMember(finalKakaoUserInfo));
-        PrincipalDetail kakaoUserPrincipal =
-                new PrincipalDetail(member, Collections.singleton(new SimpleGrantedAuthority(member.getRole().getValue())), attributes);
+        member.setRefreshToken(refreshToken);
+        member.setProviderId("kakao");
 
         return ResponseEntity.ok().header(JwtConstants.JWT_HEADER, accessToken).body(new ResponseDto());
     }
