@@ -6,10 +6,8 @@ import jakarta.persistence.*;
 public class RefreshToken {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @Column(length = 1500)
     private String refreshToken;
-
-    @OneToOne
-    private Member member;
 
     public RefreshToken() {
     }
