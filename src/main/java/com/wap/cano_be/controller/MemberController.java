@@ -57,8 +57,10 @@ public class MemberController {
 
     @GetMapping("/user")
     public ResponseEntity<ResponseDto> user(@AuthenticationPrincipal PrincipalDetail principalDetail) {
-        String email = principalDetail.getName();
-        return memberService.findMyInfo(email);
+        log.info("=====MemberController=====");
+        String name = principalDetail.getUsername();
+        log.info("name = {}", name);
+        return memberService.findMyInfo(name);
     }
 
 }
