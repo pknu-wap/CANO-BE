@@ -35,8 +35,8 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-    public ResponseEntity<ResponseDto> findMyInfo(String email) {
-        Optional<Member> member = memberRepository.findByEmail(email);
+    public ResponseEntity<ResponseDto> findMyInfo(String name) {
+        Optional<Member> member = memberRepository.findByName(name);
 
         if(member.isEmpty()){
             return MemberResponseDto.noSuchUser();
