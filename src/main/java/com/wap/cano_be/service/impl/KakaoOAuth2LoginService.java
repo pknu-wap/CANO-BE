@@ -118,6 +118,7 @@ public class KakaoOAuth2LoginService implements OAuth2LoginService {
         claim.put("id", attributes.get("id"));
         claim.put("name", profile.get("nickname"));
         claim.put("email", account.get("email"));
+        claim.put("role", "USER");
 
         String accessToken = JwtUtils.generateToken(claim, JwtConstants.ACCESS_EXP_TIME);
         log.info("access token = {}", accessToken);
