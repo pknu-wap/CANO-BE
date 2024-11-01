@@ -51,6 +51,7 @@ public class KakaoOAuth2LoginService implements OAuth2LoginService {
     }
 
     private void fetchAttributes(OAuth2LoginDto oAuth2LoginDto) {
+        log.info("=====fecthAttributes=====");
         if(oAuth2LoginDto.token().isEmpty()){
             log.warn("토큰이 없음");
             attributes.put("NT", "NO_TOKEN");
@@ -58,25 +59,23 @@ public class KakaoOAuth2LoginService implements OAuth2LoginService {
         }
 
         String accessToken = JwtConstants.JWT_TYPE + oAuth2LoginDto.token();
-        webClient.get()
+        Map<String, Object> attributes = webClient.get()
                 .uri("/v2/user/me")
                 .header(JwtConstants.JWT_HEADER, accessToken)
                 .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8")
                 .retrieve()
                 .bodyToMono(Map.class)
-                .subscribe(attributes -> {
-                    if (attributes == null) {
-                        log.warn("attributes is null, 유저 정보 불러오기 실패");
-                        this.attributes.put("CF", "CERTIFICATION_FAIL");
-                    } else {
-                        this.attributes = attributes;
-                        attributes.forEach((k, v) -> {
-                            log.info("{} : {}", k, v);
-                        });
-                    }
-                }, error -> {
-                    log.error("Error during fetching Kakao user information", error);
-                });
+                .block();
+
+        if(attributes.isEmpty()){
+            log.warn("attributes is null, 유저 정보 불러오기 실패");
+            this.attributes.put(ResponseCode.CERTIFICATION_FAIL.name(), ResponseCode.CERTIFICATION_FAIL.message());
+        } else {
+            this.attributes = attributes;
+            attributes.forEach((k,v) -> {
+                log.info("{} : {}", k, v);
+            });
+        }
     }
 
     @Override
@@ -92,10 +91,16 @@ public class KakaoOAuth2LoginService implements OAuth2LoginService {
             return OAuth2UserResponseDto.certificationFail();
         }
 
+        if(ResponseCode.VALIDATION_FAIL.name().equals(attributes.get(ResponseCode.VALIDATION_FAIL.name()))){
+            return ResponseDto.validationFail();
+        }
+
         OAuth2UserInfo kakaoUserInfo = null;
         try {
+            log.info("=====OAuth2UserInfo 생성=====");
             kakaoUserInfo = OAuth2UserInfo.of("kakao", attributes); // OAuth2User 구현체
         } catch (AuthException e) {
+            log.warn("=====!OAuth2UserInfo 생성 실패!=====");
             return ResponseEntity.internalServerError().body(new ResponseDto("error", e.getMessage()));
         }
 
