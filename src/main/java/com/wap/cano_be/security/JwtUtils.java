@@ -64,6 +64,9 @@ public class JwtUtils {
         String email = (String) claims.get("email");
         String name = (String) claims.get("name");
         String role = (String) claims.get("role");
+        if(role == null){
+            throw new IllegalArgumentException("Role이 등록되지 않았습니다.");
+        }
         MemberRole memberRole = MemberRole.valueOf(role);
 
         Member member = Member.builder().email(email).name(name).role(memberRole).build();
