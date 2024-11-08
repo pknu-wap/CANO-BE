@@ -35,11 +35,12 @@ public class Menu {
     public Menu() {}
 
     @Builder
-    public Menu(String name, String acidity, String body, String bitterness, List<String> aromas) {
+    public Menu(String name, String acidity, String body, String sweetness, String bitterness, List<String> aromas) {
         this.name = name;
         this.acidity = Degree.valueOf(acidity);
         this.body = Degree.valueOf(body);
         this.bitterness = Degree.valueOf(bitterness);
+        this.sweetness = Degree.valueOf(sweetness);
         this.aromas = new ArrayList<>(aromas);
     }
 }

@@ -7,6 +7,7 @@ public record MenuRequestDto(
         String acidity,
         String body,
         String bitterness,
-        List<String> aroma
+        String sweetness,
+        List<String> aromas
 ) {
 }
