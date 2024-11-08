@@ -2,6 +2,7 @@ package com.wap.cano_be.controller;
 
 import com.wap.cano_be.controller.enums.MenuType;
 import com.wap.cano_be.domain.enums.Degree;
+import com.wap.cano_be.dto.menu.MenuLikeDto;
 import com.wap.cano_be.dto.menu.MenuReportDto;
 import com.wap.cano_be.dto.menu.MenuRequestDto;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -68,14 +70,16 @@ public class MenuController {
     // 메뉴 조회 - 아로마
     @GetMapping("/aroma")
     public ResponseEntity<?> getMenuByAroma(
-            @RequestParam String aroma
+            @RequestParam List<String> aromas
     ){
-        return ResponseEntity.ok().body(aroma);
+        // aromas 를 갖고 있는 모든 Menu 찾기
+        return ResponseEntity.ok().body(aromas);
     }
 
     // 검색어로 메뉴 조회
     @GetMapping
     public ResponseEntity<?> getMenuByKeyword(@RequestParam("query") String keyword){
+        // 카페 이름 / 메뉴 이름으로 메뉴 찾기
         return ResponseEntity.ok().body(keyword);
     }
 
@@ -115,6 +119,16 @@ public class MenuController {
         // 기타 에러 4XX 응답
         log.info("========POST REPORT========");
         log.info("menuReportDto: {}", menuReportDto);
+        Map<String, String> response = new HashMap<>();
+        response.put("success", "정상 처리 되었습니다");
+        return ResponseEntity.ok().body(response);
+    }
+
+    // 좋아요
+    @PostMapping("/{menu_id}/like")
+    public ResponseEntity<?> setLike(@PathVariable("menu_id") long id, @RequestBody MenuLikeDto menuLikeDto){
+        // user 정보 불러옴
+        // user id 와 like 여부 등록
         Map<String, String> response = new HashMap<>();
         response.put("success", "정상 처리 되었습니다");
         return ResponseEntity.ok().body(response);
