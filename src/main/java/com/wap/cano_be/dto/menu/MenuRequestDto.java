@@ -4,6 +4,7 @@ import java.util.List;
 
 public record MenuRequestDto(
         String name,
+        int price,
         String acidity,
         String body,
         String bitterness,

@@ -14,6 +14,7 @@ public class Menu {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
+    private int price;
 
     @Enumerated(value = EnumType.STRING)
     private Degree acidity;
@@ -35,8 +36,9 @@ public class Menu {
     public Menu() {}
 
     @Builder
-    public Menu(String name, String acidity, String body, String sweetness, String bitterness, List<String> aromas) {
+    public Menu(String name, int price, String acidity, String body, String sweetness, String bitterness, List<String> aromas) {
         this.name = name;
+        this.price = price;
         this.acidity = Degree.valueOf(acidity);
         this.body = Degree.valueOf(body);
         this.bitterness = Degree.valueOf(bitterness);
