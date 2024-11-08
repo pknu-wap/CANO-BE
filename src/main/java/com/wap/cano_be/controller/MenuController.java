@@ -2,12 +2,16 @@ package com.wap.cano_be.controller;
 
 import com.wap.cano_be.controller.enums.MenuType;
 import com.wap.cano_be.domain.enums.Degree;
+import com.wap.cano_be.dto.menu.MenuReportDto;
+import com.wap.cano_be.dto.menu.MenuRequestDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/menus")
 public class MenuController {
@@ -96,6 +100,8 @@ public class MenuController {
         // DTO 를 서비스로 전달
         // 정상 처리 시 200 응답
         // 기타 에러 4XX 응답
+        log.info("========POST MENU========");
+        log.info("menuRequestDto: {}", menuRequestDto);
         Map<String, String> response = new HashMap<>();
         response.put("success", "정상 처리 되었습니다");
         return ResponseEntity.ok().body(response);
@@ -107,6 +113,8 @@ public class MenuController {
         // DTO 를 서비스로 전달
         // 정상 처리 시 200 응답
         // 기타 에러 4XX 응답
+        log.info("========POST REPORT========");
+        log.info("menuReportDto: {}", menuReportDto);
         Map<String, String> response = new HashMap<>();
         response.put("success", "정상 처리 되었습니다");
         return ResponseEntity.ok().body(response);
