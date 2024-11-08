@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 public class Menu {
@@ -24,16 +27,19 @@ public class Menu {
     @Enumerated(value = EnumType.STRING)
     private Degree sweetness;
 
-    private String aroma;
+    @ElementCollection
+    @CollectionTable(name = "menu_aromas", joinColumns = @JoinColumn(name = "menu_id"))
+    @Column(name = "aroma")
+    private List<String> aromas = new ArrayList<>();
 
     public Menu() {}
 
     @Builder
-    public Menu(String name, String acidity, String body, String bitterness, String aroma) {
+    public Menu(String name, String acidity, String body, String bitterness, List<String> aromas) {
         this.name = name;
         this.acidity = Degree.valueOf(acidity);
         this.body = Degree.valueOf(body);
         this.bitterness = Degree.valueOf(bitterness);
-        this.aroma = aroma;
+        this.aromas = new ArrayList<>(aromas);
     }
 }
