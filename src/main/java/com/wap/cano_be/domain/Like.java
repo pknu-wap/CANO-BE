@@ -17,4 +17,11 @@ public class Like {
     @ManyToOne(targetEntity = Menu.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id")
     private Menu menu;
+
+    public Like() {}
+
+    public Like(Member member, Menu menu) {
+        this.member = member;
+        this.menu = menu;
+    }
 }

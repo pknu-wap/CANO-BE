@@ -1,9 +1,14 @@
 package com.wap.cano_be.controller;
 
+import com.wap.cano_be.domain.PrincipalDetail;
 import com.wap.cano_be.dto.menu.*;
+import com.wap.cano_be.service.impl.LikeService;
 import com.wap.cano_be.service.impl.MenuService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -15,9 +20,12 @@ import java.util.Map;
 @RequestMapping("/api/menus")
 public class MenuController {
     private final MenuService menuService;
+    private final LikeService likeService;
 
-    public MenuController(MenuService menuService) {
+    @Autowired
+    public MenuController(MenuService menuService, LikeService likeService) {
         this.menuService = menuService;
+        this.likeService = likeService;
     }
 
     private ResponseEntity<Map<String, String>> getNoDataResponse() {
@@ -104,9 +112,25 @@ public class MenuController {
 
     // 좋아요
     @PostMapping("/{menu_id}/like")
-    public ResponseEntity<?> setLike(@PathVariable("menu_id") long id, @RequestBody MenuLikeDto menuLikeDto){
-        // user 정보 불러옴
-        // user id 와 like 여부 등록
+    public ResponseEntity<?> setLike(
+            @PathVariable("menu_id") long id,
+            @RequestBody MenuLikeDto menuLikeDto,
+            @AuthenticationPrincipal PrincipalDetail principalDetail){
+
+        if(menuLikeDto == null){
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "잘못된 요청 양식 입니다.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Long memberId = principalDetail.getMember().getId();
+        if(memberId == null){
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "유효하지 않은 사용자입니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
+
+        likeService.updateLike(memberId, id, menuLikeDto.like());
         return getSuccessResponse();
     }
 }
