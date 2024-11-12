@@ -17,7 +17,7 @@ public class Member {
     private String email;
     private String password;
     private String name;
-    private String socialId;
+    private Long socialId;
     private String profileImageUrl;
     @Setter
     private String providerId;

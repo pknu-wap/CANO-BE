@@ -7,7 +7,7 @@ import java.util.Map;
 
 @Builder
 public record OAuth2UserInfo(
-        String socialId,
+        long socialId,
         String name,
         String email,
         String profileImageUrl
@@ -22,7 +22,7 @@ public record OAuth2UserInfo(
 
     private static OAuth2UserInfo ofGoogle(Map<String, Object> attributes){
         return OAuth2UserInfo.builder()
-                .socialId((String) attributes.get("sub"))
+                .socialId((long) attributes.get("sub"))
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
                 .profileImageUrl((String) attributes.get("picture"))
@@ -36,7 +36,7 @@ public record OAuth2UserInfo(
         }
         Map<String, Object> profile = (Map<String, Object>) account.get("profile");
         return OAuth2UserInfo.builder()
-                .socialId(String.valueOf(attributes.get("id")))
+                .socialId((long) attributes.get("id"))
                 .name((String) profile.get("nickname"))
                 .email((String) account.get("email"))
                 .profileImageUrl((String) profile.get("profile_image_url"))

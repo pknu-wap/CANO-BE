@@ -195,7 +195,7 @@ public class KakaoOAuth2LoginService implements OAuth2LoginService {
             // Member가 없는 경우 새 멤버 추가
             member = Member.builder()
                     .email(email)
-                    .socialId(response.get("id").getAsString())
+                    .socialId(response.get("id").getAsLong())
                     .providerId("kakao")
                     .role(MemberRole.USER)
                     .build();
