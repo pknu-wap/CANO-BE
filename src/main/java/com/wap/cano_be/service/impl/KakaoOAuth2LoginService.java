@@ -126,14 +126,19 @@ public class KakaoOAuth2LoginService implements OAuth2LoginService {
             return ResponseEntity.internalServerError().body(new ResponseDto(ResponseCode.VALIDATION_FAIL.name(), "Jwt 토큰이 정상적으로 생성되지 않았습니다."));
         }
 
-        RefreshToken refreshToken = new RefreshToken(JwtUtils.generateToken(claim, JwtConstants.REFRESH_EXP_TIME));
+        String refreshTokenStr = JwtUtils.generateToken(claim, JwtConstants.REFRESH_EXP_TIME);
+        RefreshToken refreshToken = new RefreshToken(refreshTokenStr);
         refreshTokenRepository.save(refreshToken);
 
         Member member = findUser.orElseGet(() -> saveSocialMember(finalKakaoUserInfo));
         member.setRefreshToken(refreshToken);
         member.setProviderId("kakao");
 
-        return ResponseEntity.ok().header(JwtConstants.JWT_HEADER, accessToken).body(new ResponseDto());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(JwtConstants.JWT_HEADER, accessToken);
+        headers.add("Refresh-token", refreshTokenStr);
+
+        return ResponseEntity.ok().headers(headers).body(new ResponseDto());
     }
 
     // 소셜 ID 로 가입된 사용자가 없으면 새로운 사용자를 만들어 저장한다
