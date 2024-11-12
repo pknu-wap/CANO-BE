@@ -15,18 +15,12 @@ public class Menu {
     private long id;
     private String name;
     private int price;
-
-    @Enumerated(value = EnumType.STRING)
-    private Degree acidity;
-
-    @Enumerated(value = EnumType.STRING)
-    private Degree body;
-
-    @Enumerated(value = EnumType.STRING)
-    private Degree bitterness;
-
-    @Enumerated(value = EnumType.STRING)
-    private Degree sweetness;
+    private double score;
+    private String imageUrl;
+    private double acidity;
+    private double body;
+    private double bitterness;
+    private double sweetness;
 
     @ElementCollection
     @CollectionTable(name = "menu_aromas", joinColumns = @JoinColumn(name = "menu_id"))
@@ -36,13 +30,15 @@ public class Menu {
     public Menu() {}
 
     @Builder
-    public Menu(String name, int price, String acidity, String body, String sweetness, String bitterness, List<String> aromas) {
+    public Menu(String name, int price, double score, String imageUrl, double acidity, double body, double sweetness, double bitterness, List<String> aromas) {
         this.name = name;
         this.price = price;
-        this.acidity = Degree.valueOf(acidity);
-        this.body = Degree.valueOf(body);
-        this.bitterness = Degree.valueOf(bitterness);
-        this.sweetness = Degree.valueOf(sweetness);
+        this.score = score;
+        this.imageUrl = imageUrl;
+        this.acidity = acidity;
+        this.body = body;
+        this.bitterness = bitterness;
+        this.sweetness = sweetness;
         this.aromas = new ArrayList<>(aromas);
     }
 }
