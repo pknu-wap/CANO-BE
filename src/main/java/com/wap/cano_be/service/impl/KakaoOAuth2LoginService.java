@@ -77,63 +77,64 @@ public class KakaoOAuth2LoginService implements OAuth2LoginService {
 
     @Override
     public ResponseEntity<ResponseDto> oauth2Login(OAuth2LoginDto oAuth2LoginDto){
-        log.info("-------------------KakaoOAuth2APIService----------------------------");
-        fetchAttributes(oAuth2LoginDto); // attribute
-
-        if("NO_TOKEN".equals(attributes.get("NT"))){
-            return ResponseEntity.badRequest().body(new ResponseDto("NO_TOKEN", "토큰이 없습니다."));
-        }
-
-        if("CERTIFICATION_FAIL".equals(attributes.get("CF"))) {
-            return OAuth2UserResponseDto.certificationFail();
-        }
-
-        if(ResponseCode.VALIDATION_FAIL.name().equals(attributes.get(ResponseCode.VALIDATION_FAIL.name()))){
-            return ResponseDto.validationFail();
-        }
-
-        OAuth2UserInfo kakaoUserInfo = null;
-        try {
-            log.info("=====OAuth2UserInfo 생성=====");
-            kakaoUserInfo = OAuth2UserInfo.of("kakao", attributes); // OAuth2User 구현체
-        } catch (AuthException e) {
-            log.warn("=====!OAuth2UserInfo 생성 실패!=====");
-            return ResponseEntity.internalServerError().body(new ResponseDto("error", e.getMessage()));
-        }
-
-        if(kakaoUserInfo == null){
-            log.info("유저 생성에 실패했습니다.");
-            return ResponseDto.noSuchUser();
-        }
-
-        Optional<Member> findUser = memberRepository.findBySocialId(kakaoUserInfo.socialId());
-        OAuth2UserInfo finalKakaoUserInfo = kakaoUserInfo;
-
-        log.info("Token generate");
-
-        Map<String, Object> account = (Map<String, Object>) attributes.get("kakao_account");
-        Map<String, Object> profile = (Map<String, Object>) account.get("profile");
-        Map<String, Object> claim = new HashMap<>();
-
-        claim.put("id", attributes.get("id"));
-        claim.put("name", profile.get("nickname"));
-        claim.put("email", account.get("email"));
-        claim.put("role", "USER");
-
-        String accessToken = JwtUtils.generateToken(claim, JwtConstants.ACCESS_EXP_TIME);
-        log.info("access token = {}", accessToken);
-        if(accessToken.isEmpty()){
-            return ResponseEntity.internalServerError().body(new ResponseDto(ResponseCode.VALIDATION_FAIL.name(), "Jwt 토큰이 정상적으로 생성되지 않았습니다."));
-        }
-
-        RefreshToken refreshToken = new RefreshToken(JwtUtils.generateToken(claim, JwtConstants.REFRESH_EXP_TIME));
-        refreshTokenRepository.save(refreshToken);
-
-        Member member = findUser.orElseGet(() -> saveSocialMember(finalKakaoUserInfo));
-        member.setRefreshToken(refreshToken);
-        member.setProviderId("kakao");
-
-        return ResponseEntity.ok().header(JwtConstants.JWT_HEADER, accessToken).body(new ResponseDto());
+//        log.info("-------------------KakaoOAuth2APIService----------------------------");
+//        fetchAttributes(oAuth2LoginDto); // attribute
+//
+//        if("NO_TOKEN".equals(attributes.get("NT"))){
+//            return ResponseEntity.badRequest().body(new ResponseDto("NO_TOKEN", "토큰이 없습니다."));
+//        }
+//
+//        if("CERTIFICATION_FAIL".equals(attributes.get("CF"))) {
+//            return OAuth2UserResponseDto.certificationFail();
+//        }
+//
+//        if(ResponseCode.VALIDATION_FAIL.name().equals(attributes.get(ResponseCode.VALIDATION_FAIL.name()))){
+//            return ResponseDto.validationFail();
+//        }
+//
+//        OAuth2UserInfo kakaoUserInfo = null;
+//        try {
+//            log.info("=====OAuth2UserInfo 생성=====");
+//            kakaoUserInfo = OAuth2UserInfo.of("kakao", attributes); // OAuth2User 구현체
+//        } catch (AuthException e) {
+//            log.warn("=====!OAuth2UserInfo 생성 실패!=====");
+//            return ResponseEntity.internalServerError().body(new ResponseDto("error", e.getMessage()));
+//        }
+//
+//        if(kakaoUserInfo == null){
+//            log.info("유저 생성에 실패했습니다.");
+//            return ResponseDto.noSuchUser();
+//        }
+//
+//        Optional<Member> findUser = memberRepository.findBySocialId(kakaoUserInfo.socialId());
+//        OAuth2UserInfo finalKakaoUserInfo = kakaoUserInfo;
+//
+//        log.info("Token generate");
+//
+//        Map<String, Object> account = (Map<String, Object>) attributes.get("kakao_account");
+//        Map<String, Object> profile = (Map<String, Object>) account.get("profile");
+//        Map<String, Object> claim = new HashMap<>();
+//
+//        claim.put("id", attributes.get("id"));
+//        claim.put("name", profile.get("nickname"));
+//        claim.put("email", account.get("email"));
+//        claim.put("role", "USER");
+//
+//        String accessToken = JwtUtils.generateToken(claim, JwtConstants.ACCESS_EXP_TIME);
+//        log.info("access token = {}", accessToken);
+//        if(accessToken.isEmpty()){
+//            return ResponseEntity.internalServerError().body(new ResponseDto(ResponseCode.VALIDATION_FAIL.name(), "Jwt 토큰이 정상적으로 생성되지 않았습니다."));
+//        }
+//
+//        RefreshToken refreshToken = new RefreshToken(JwtUtils.generateToken(claim, JwtConstants.REFRESH_EXP_TIME));
+//        refreshTokenRepository.save(refreshToken);
+//
+//        Member member = findUser.orElseGet(() -> saveSocialMember(finalKakaoUserInfo));
+//        member.setRefreshToken(refreshToken);
+//        member.setProviderId("kakao");
+//
+//        return ResponseEntity.ok().header(JwtConstants.JWT_HEADER, accessToken).body(new ResponseDto());
+        return null;
     }
 
     // 소셜 ID 로 가입된 사용자가 없으면 새로운 사용자를 만들어 저장한다

@@ -25,9 +25,4 @@ public class Member {
     private MemberRole role;
     @Enumerated(EnumType.STRING)
     private Gender gender;
-
-    @Setter
-    @OneToOne
-    @JoinColumn(name="refreshtoken_id", unique = true)
-    private RefreshToken refreshToken;
 }
