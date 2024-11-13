@@ -82,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
     private Member createMemberFromKakaoToken(String email, JsonObject token) {
         Member member = Member.builder()
                 .email(email)
-                .socialId(token.get("id").getAsString())
+                .socialId(token.get("id").getAsLong())
                 .providerId("kakao")
                 .role(MemberRole.USER)
                 .build();
