@@ -1,4 +1,4 @@
-package com.wap.cano_be.dto.oauth2;
+package com.wap.cano_be.dto.auth;
 
 import jakarta.security.auth.message.AuthException;
 import lombok.Builder;

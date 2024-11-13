@@ -1,13 +1,18 @@
 package com.wap.cano_be.domain;
 
-import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
-@Entity
+@Getter
+@AllArgsConstructor
+@RedisHash(value = "refresh_token", timeToLive = 604800)
 public class RefreshToken {
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-    @Column(length = 1500)
+    @Id
     private String refreshToken;
+
+    private Long userId;
 
     public RefreshToken() {
     }
