@@ -1,4 +1,4 @@
-package com.wap.cano_be.dto.oauth2;
+package com.wap.cano_be.dto.auth;
 
 import com.wap.cano_be.common.ResponseCode;
 import com.wap.cano_be.common.ResponseDto;

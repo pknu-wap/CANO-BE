@@ -5,7 +5,7 @@ import com.wap.cano_be.domain.Member;
 import com.wap.cano_be.domain.PrincipalDetail;
 import com.wap.cano_be.dto.member.MemberRequestDto;
 import com.wap.cano_be.dto.member.MemberResponseDto;
-import com.wap.cano_be.dto.oauth2.OAuth2LoginDto;
+import com.wap.cano_be.dto.auth.OAuth2LoginDto;
 import com.wap.cano_be.service.impl.MemberService;
 import com.wap.cano_be.service.OAuth2LoginService;
 import lombok.extern.slf4j.Slf4j;

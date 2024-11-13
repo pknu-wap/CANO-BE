@@ -10,12 +10,12 @@ import com.wap.cano_be.security.JwtConstants;
 import com.wap.cano_be.security.JwtUtils;
 import com.wap.cano_be.domain.Member;
 import com.wap.cano_be.domain.enums.MemberRole;
-import com.wap.cano_be.dto.oauth2.OAuth2LoginDto;
-import com.wap.cano_be.dto.oauth2.OAuth2UserResponseDto;
+import com.wap.cano_be.dto.auth.OAuth2LoginDto;
+import com.wap.cano_be.dto.auth.OAuth2UserResponseDto;
 import com.wap.cano_be.repository.MemberRepository;
-import com.wap.cano_be.dto.oauth2.TestLoginDto;
+import com.wap.cano_be.dto.auth.LoginRequestDto;
 import com.wap.cano_be.service.OAuth2LoginService;
-import com.wap.cano_be.dto.oauth2.OAuth2UserInfo;
+import com.wap.cano_be.dto.auth.OAuth2UserInfo;
 import jakarta.security.auth.message.AuthException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,13 +151,13 @@ public class KakaoOAuth2LoginService implements OAuth2LoginService {
     }
 
     @Override
-    public JsonObject getUserInfoFromToken(TestLoginDto testLoginDto) {
-        log.info("token: " + testLoginDto.getToken());
+    public JsonObject getUserInfoFromToken(LoginRequestDto loginRequestDto) {
+        log.info("token: " + loginRequestDto.getToken());
         final String KAKAO_USER_INFO_URL = "https://kapi.kakao.com/v2/user/me";
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + testLoginDto.getToken());
+        headers.set("Authorization", "Bearer " + loginRequestDto.getToken());
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
@@ -174,8 +174,8 @@ public class KakaoOAuth2LoginService implements OAuth2LoginService {
         return gson.fromJson(response.getBody(), JsonObject.class);
     }
 
-    public ResponseEntity<?> kakaoLogin(TestLoginDto testLoginDto) {
-        JsonObject response = getUserInfoFromToken(testLoginDto);
+    public ResponseEntity<?> kakaoLogin(LoginRequestDto loginRequestDto) {
+        JsonObject response = getUserInfoFromToken(loginRequestDto);
         // 카카오 토큰에서 이메일 추출
         String email = response.get("kakao_account").getAsJsonObject().get("email").getAsString();
 
