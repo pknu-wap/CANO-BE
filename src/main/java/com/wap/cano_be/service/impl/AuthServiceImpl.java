@@ -7,11 +7,15 @@ import com.wap.cano_be.domain.RefreshToken;
 import com.wap.cano_be.domain.enums.MemberRole;
 import com.wap.cano_be.dto.auth.LoginRequestDto;
 import com.wap.cano_be.dto.auth.LoginResponseDto;
+import com.wap.cano_be.dto.auth.ReissueRequestDto;
+import com.wap.cano_be.dto.auth.ReissueResponseDto;
 import com.wap.cano_be.repository.MemberRepository;
 import com.wap.cano_be.repository.RefreshTokenRepository;
 import com.wap.cano_be.security.JwtConstants;
 import com.wap.cano_be.security.JwtUtils;
 import com.wap.cano_be.service.AuthService;
+import io.jsonwebtoken.Claims;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -41,23 +45,30 @@ public class AuthServiceImpl implements AuthService {
         // 이메일로 Member 검색 또는 생성
         Member member = getOrCreateMemberFromKakaoToken(email, token);
 
-        // AccessToken 생성
-        Map<String, Object> accessTokenClaims = new HashMap<>();
-        accessTokenClaims.put("email", member.getEmail());
-        accessTokenClaims.put("role", member.getRole());
-        String accessToken = JwtUtils.generateToken(accessTokenClaims, JwtConstants.ACCESS_EXP_TIME);
-
-        // RefreshToken 생성
-        Map<String, Object> refreshTokenClaims = new HashMap<>();
-        refreshTokenClaims.put("email", member.getEmail());
-        refreshTokenClaims.put("role", member.getRole());
-        String refreshToken = JwtUtils.generateToken(refreshTokenClaims, JwtConstants.REFRESH_EXP_TIME);
-
-        // 새로 생성된 RefreshToken 저장
-        RefreshToken refreshTokenForRedis = new RefreshToken(refreshToken, member.getId());
-        refreshTokenRepository.save(refreshTokenForRedis);
+        // 토큰 생성
+        String accessToken = createAccessToken(member.getEmail(), member.getRole());
+        String refreshToken = createRefreshTokenAndSave(member.getEmail(), member.getRole(), member.getId());
 
         return ResponseEntity.ok().body(new LoginResponseDto(accessToken, refreshToken));
+    }
+
+    private String createAccessToken(String email, MemberRole role) {
+        Map<String, Object> accessTokenClaims = new HashMap<>();
+        accessTokenClaims.put("email", email);
+        accessTokenClaims.put("role", role);
+        return JwtUtils.generateToken(accessTokenClaims, JwtConstants.ACCESS_EXP_TIME);
+    }
+
+    private String createRefreshTokenAndSave(String email, MemberRole role, long id) {
+        Map<String, Object> refreshTokenClaims = new HashMap<>();
+        refreshTokenClaims.put("email", email);
+        refreshTokenClaims.put("role", role);
+        String refreshToken = JwtUtils.generateToken(refreshTokenClaims, JwtConstants.REFRESH_EXP_TIME);
+
+        RefreshToken refreshTokenForRedis = new RefreshToken(refreshToken, id);
+        refreshTokenRepository.save(refreshTokenForRedis);
+
+        return refreshToken;
     }
 
     private String extractEmailFromKakaoToken(JsonObject token) {
@@ -96,5 +107,25 @@ public class AuthServiceImpl implements AuthService {
         Gson gson = new Gson();
 
         return gson.fromJson(response.getBody(), JsonObject.class);
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<ReissueResponseDto> reissue(ReissueRequestDto requestDto) {
+        Claims claims = JwtUtils.validateToken(requestDto.getRefreshToken());
+        String email = claims.get("email").toString();
+
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("Member with email: " + email + " is not found."));
+
+        deleteExistingRefreshToken(requestDto.getRefreshToken());
+
+        String accessToken = createAccessToken(member.getEmail(), member.getRole());
+        String refreshToken = createRefreshTokenAndSave(member.getEmail(), member.getRole(), member.getId());
+
+        return ResponseEntity.ok().body(new ReissueResponseDto(accessToken, refreshToken));
+    }
+
+    private void deleteExistingRefreshToken(String refreshToken) {
+        refreshTokenRepository.deleteById(refreshToken);
     }
 }
