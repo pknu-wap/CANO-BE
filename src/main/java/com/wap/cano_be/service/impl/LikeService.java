@@ -30,9 +30,11 @@ public class LikeService {
 
         if(like){
             if(!likeRepository.existsByMemberAndMenu(member, menu)){
+                menu.increaseLikeCount();
                 likeRepository.save(new Like(member, menu));
             }
         } else {
+            menu.decreaseLikeCount();
             likeRepository.deleteByMemberAndMenu(member, menu);
         }
     }

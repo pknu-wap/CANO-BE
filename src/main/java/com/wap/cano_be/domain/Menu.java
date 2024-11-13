@@ -12,20 +12,27 @@ import java.util.List;
 @Getter
 public class Menu {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String name;
-    private int price;
-    private double score;
+    private Integer price;
+    private Double score;
     private String imageUrl;
-    private double acidity;
-    private double body;
-    private double bitterness;
-    private double sweetness;
+    private Double acidity;
+    private Double body;
+    private Double bitterness;
+    private Double sweetness;
+    private Integer likeCount;
 
     @ElementCollection
     @CollectionTable(name = "menu_aromas", joinColumns = @JoinColumn(name = "menu_id"))
-    @Column(name = "aroma")
+    @Column(name = "aromas")
     private List<String> aromas = new ArrayList<>();
+
+    @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "like", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
 
     public Menu() {}
 
@@ -40,5 +47,13 @@ public class Menu {
         this.bitterness = bitterness;
         this.sweetness = sweetness;
         this.aromas = new ArrayList<>(aromas);
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decreaseLikeCount() {
+        this.likeCount--;
     }
 }
