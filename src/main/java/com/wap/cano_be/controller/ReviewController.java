@@ -30,7 +30,7 @@ public class ReviewController {
             response.put("error", "잘못된 요청 양식입니다.");
             return ResponseEntity.badRequest().body(response);
         }
-        return ResponseEntity.ok(menuId);
+        return ResponseEntity.ok().body(reviewResponseDtos);
     }
 
     @PatchMapping("/{review_id}")

@@ -80,14 +80,6 @@ public class MenuController {
         return ResponseEntity.ok().body(menuResponseDto);
     }
 
-    // 메뉴로부터 리뷰 조회
-    @GetMapping("/{menu_id}/reviews")
-    public ResponseEntity<?> getReviews(@PathVariable("menu_id") String menuId){
-        // id로 메뉴 찾기
-        // 있다면 작성된 리뷰 모두 찾기
-        return ResponseEntity.ok().body(menuId);
-    }
-
     private ResponseEntity<Map<String, String>> getSuccessResponse() {
         Map<String, String> response = new HashMap<>();
         response.put("success", "정상 처리 되었습니다");
