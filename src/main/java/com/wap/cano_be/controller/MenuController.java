@@ -2,8 +2,10 @@ package com.wap.cano_be.controller;
 
 import com.wap.cano_be.domain.PrincipalDetail;
 import com.wap.cano_be.dto.menu.*;
+import com.wap.cano_be.dto.review.ReviewRequestDto;
 import com.wap.cano_be.service.impl.LikeService;
 import com.wap.cano_be.service.impl.MenuService;
+import com.wap.cano_be.service.impl.ReviewService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,11 +23,13 @@ import java.util.Map;
 public class MenuController {
     private final MenuService menuService;
     private final LikeService likeService;
+    private final ReviewService reviewService;
 
     @Autowired
-    public MenuController(MenuService menuService, LikeService likeService) {
+    public MenuController(MenuService menuService, LikeService likeService, ReviewService reviewService) {
         this.menuService = menuService;
         this.likeService = likeService;
+        this.reviewService = reviewService;
     }
 
     private ResponseEntity<Map<String, String>> getNoDataResponse() {
@@ -96,6 +100,30 @@ public class MenuController {
         log.info("========POST MENU========");
         log.info("menuRequestDto: {}", menuRequestDto);
         menuService.saveMenu(menuRequestDto);
+        return getSuccessResponse();
+    }
+
+    // 리뷰 등록
+    @PostMapping("/{menu_id}/review")
+    public ResponseEntity<?> writeReview(
+            @PathVariable("menu_id") long id,
+            @RequestBody ReviewRequestDto reviewRequestDto,
+            @AuthenticationPrincipal PrincipalDetail principalDetail){
+        long memberId = principalDetail.getMember().getSocialId();
+        reviewService.createReview(reviewRequestDto, id, memberId);
+
+        return getSuccessResponse();
+    }
+
+    // 리뷰 삭제
+    @DeleteMapping("/{menu_id}/review")
+    public ResponseEntity<?> deleteReview(
+            @PathVariable("menu_id") long id,
+            @AuthenticationPrincipal PrincipalDetail principalDetail
+    ){
+        long memberId = principalDetail.getMember().getSocialId();
+
+
         return getSuccessResponse();
     }
 

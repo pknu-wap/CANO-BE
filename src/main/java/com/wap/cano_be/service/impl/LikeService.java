@@ -28,13 +28,18 @@ public class LikeService {
         Member member = memberRepository.findBySocialId(memberId).orElseThrow(()->new IllegalArgumentException("Member not found"));
         Menu menu = menuRepository.findById(menuId);
 
+        // 좋아요 했다면
         if(like){
+            // member - menu 간 join이 없다면
             if(!likeRepository.existsByMemberAndMenu(member, menu)){
                 menu.increaseLikeCount();
+                menuRepository.save(menu); // transactional 고려해 이후 제거할 수도 있음
                 likeRepository.save(new Like(member, menu));
             }
         } else {
+            // 좋아요 해제
             menu.decreaseLikeCount();
+            menuRepository.save(menu);
             likeRepository.deleteByMemberAndMenu(member, menu);
         }
     }
