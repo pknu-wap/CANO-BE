@@ -2,7 +2,7 @@ package com.wap.cano_be.dto.menu;
 
 import lombok.Builder;
 
-import java.util.List;
+import java.util.Map;
 
 @Builder
 public record MenuResponseDto(
@@ -14,7 +14,7 @@ public record MenuResponseDto(
         double body,
         double bitterness,
         double sweetness,
-        List<String> aromas,
+        Map<String, Integer> aromas,
         String imageUrl
 ) {
 }

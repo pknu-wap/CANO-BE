@@ -23,9 +23,6 @@ public class MenuService {
     public MenuService(MenuRepository menuRepository) {
         this.menuRepository = menuRepository;
     }
-    
-    // 리뷰를 POST 할 때 마다 메뉴의 각 Attribute 들의
-    // 수치를 계산 해 Update하는 로직도 필요
 
     private Degree getDegree(String degree){
         for (Degree deg:Degree.values()) {
@@ -108,7 +105,6 @@ public class MenuService {
         if(menus.isEmpty()){
             return null;
         }
-        // 평점 계산 로직
         
         return menus.stream()
                 .map(menu -> MenuResponseDto.builder()
@@ -159,6 +155,4 @@ public class MenuService {
 
     // 메뉴 리포트
 
-
-    // 좋아요
 }
