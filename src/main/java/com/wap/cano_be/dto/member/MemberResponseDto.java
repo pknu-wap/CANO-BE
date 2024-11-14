@@ -11,11 +11,11 @@ import org.springframework.http.ResponseEntity;
 public class MemberResponseDto extends ResponseDto {
     private String name;
     private String email;
-    private String socialId;
+    private Long socialId;
     private String profileImageUrl;
 
     @Builder
-    public MemberResponseDto(String name, String email, String socialId, String profileImageUrl) {
+    public MemberResponseDto(String name, String email, Long socialId, String profileImageUrl) {
         super();
         this.name = name;
         this.email = email;
