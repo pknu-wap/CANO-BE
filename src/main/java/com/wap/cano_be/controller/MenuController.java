@@ -122,7 +122,7 @@ public class MenuController {
             @AuthenticationPrincipal PrincipalDetail principalDetail
     ){
         long memberId = principalDetail.getMember().getSocialId();
-
+        reviewService.deleteReview(id, memberId);
 
         return getSuccessResponse();
     }
