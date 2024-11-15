@@ -2,6 +2,7 @@ package com.wap.cano_be.service.impl;
 
 import com.wap.cano_be.domain.Menu;
 import com.wap.cano_be.domain.enums.Degree;
+import com.wap.cano_be.dto.menu.MenuAromasResponseDto;
 import com.wap.cano_be.dto.menu.MenuAttributeResponseDto;
 import com.wap.cano_be.dto.menu.MenuRequestDto;
 import com.wap.cano_be.dto.menu.MenuResponseDto;
@@ -41,7 +42,6 @@ public class MenuService {
         if(menus.isEmpty()){
             return null;
         }
-        // 평점 계산 로직
 
         switch (attribute.toLowerCase()){
             case "acidity"-> menus.stream()
@@ -95,7 +95,22 @@ public class MenuService {
     }
 
     // 아로마로 메뉴 조회
-
+    @ReadOnlyProperty
+    public List<MenuAromasResponseDto> getMenuByAromas(List<String> aromas){
+        List<Menu> menus = menuRepository.findAllByAromas(aromas);
+        if(menus.isEmpty()){
+            return null;
+        }
+        return menus.stream()
+                .map(menu -> MenuAromasResponseDto.builder()
+                        .name(menu.getName())
+                        .score(menu.getScore())
+                        .aromas(menu.getAromas())
+                        .imageUrl(menu.getImageUrl())
+                        .build()
+                )
+                .collect(Collectors.toList());
+    }
 
     // 검색어로 메뉴 조회
     // 검색어는 메뉴명으로 가정
@@ -150,7 +165,6 @@ public class MenuService {
                         .imageUrl(menuRequestDto.imageUrl())
                         .price(menuRequestDto.price())
                 .build());
-        return;
     }
 
     // 메뉴 리포트
