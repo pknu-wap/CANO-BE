@@ -11,6 +11,7 @@ import com.wap.cano_be.repository.MenuRepository;
 import com.wap.cano_be.repository.ReviewRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -83,6 +84,7 @@ public class ReviewService {
     }
 
     // 메뉴로부터 리뷰 조회
+    @ReadOnlyProperty
     public List<ReviewResponseDto> getReviewsByMenuId(long menuId){
         Menu menu = menuRepository.findById(menuId);
 

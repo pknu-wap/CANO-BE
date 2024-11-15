@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface MenuCustomRepository {
     List<Menu> findAllByAttribute(String attribute, Degree degree);
+    List<Menu> findAllByAromas(List<String> aromas);
     List<Menu> findAllByKeyword(String keyword);
 }
