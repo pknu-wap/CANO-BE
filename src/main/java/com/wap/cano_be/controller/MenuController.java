@@ -52,12 +52,15 @@ public class MenuController {
     }
 
     // 메뉴 조회 - 아로마
-    @GetMapping("/aroma")
+    @GetMapping
     public ResponseEntity<?> getMenusByAromas(
             @RequestParam List<String> aromas
     ){
-        // aromas 를 갖고 있는 모든 Menu 찾기
-        return ResponseEntity.ok().body(aromas);
+        List<MenuAromasResponseDto> responseDtos = menuService.getMenuByAromas(aromas);
+        if(responseDtos.isEmpty()){
+            return getNoDataResponse();
+        }
+        return ResponseEntity.ok().body(responseDtos);
     }
 
     // 검색어로 메뉴 조회
