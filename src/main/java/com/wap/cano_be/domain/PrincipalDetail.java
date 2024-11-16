@@ -37,6 +37,8 @@ public class PrincipalDetail implements UserDetails {
         return info;
     }
 
+    public String getEmail() {return member.getEmail();}
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
