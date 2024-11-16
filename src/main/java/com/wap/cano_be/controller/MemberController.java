@@ -55,8 +55,8 @@ public class MemberController {
 
     }
 
-    @GetMapping("/user")
-    public ResponseEntity<ResponseDto> user(@AuthenticationPrincipal PrincipalDetail principalDetail) {
+    @GetMapping("/members/me")
+    public ResponseEntity<ResponseDto> myInfo(@AuthenticationPrincipal PrincipalDetail principalDetail) {
         log.info("=====MemberController=====");
         String email = principalDetail.getEmail();
         log.info("email = {}", email);
