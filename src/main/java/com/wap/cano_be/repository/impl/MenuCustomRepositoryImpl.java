@@ -64,8 +64,14 @@ public class MenuCustomRepositoryImpl implements MenuCustomRepository {
 
     @Override
     public List<Menu> findAllByAromas(List<String> aromas){
+        BooleanBuilder predicate = new BooleanBuilder();
+
+        for (String aroma: aromas) {
+            predicate.or(menu.aromas.containsKey(aroma));
+        }
+
         return jpaQueryFactory.selectFrom(menu)
-                .where(menu.aromas.any().in(aromas))
+                .where(predicate)
                 .fetch();
     }
 
