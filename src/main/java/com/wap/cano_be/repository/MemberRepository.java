@@ -12,7 +12,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmail(@Param("email") String email);
 
     @Query("select m from Member m where m.socialId = :socialId")
-    Optional<Member> findBySocialId(@Param("socialId") String socialId);
+    Optional<Member> findBySocialId(@Param("socialId") long socialId);
 
     Optional<Member> findByName(String name);
 }
