@@ -52,7 +52,7 @@ public class MenuController {
     }
 
     // 메뉴 조회 - 아로마
-    @GetMapping
+    @GetMapping("/search/aroma")
     public ResponseEntity<?> getMenusByAromas(
             @RequestParam List<String> aromas
     ){
@@ -64,7 +64,7 @@ public class MenuController {
     }
 
     // 검색어로 메뉴 조회
-    @GetMapping
+    @GetMapping("/search/keyword")
     public ResponseEntity<?> getMenuByKeyword(@RequestParam("query") String keyword){
         List<MenuResponseDto> menus = menuService.getMenuByKeyword(keyword);
         if(menus == null || menus.isEmpty()){
