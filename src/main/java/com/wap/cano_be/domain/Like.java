@@ -3,9 +3,7 @@ package com.wap.cano_be.domain;
 import jakarta.persistence.*;
 
 @Entity
-/**
- * Menu - Member 의 Join 테이블
- */
+@Table(name = "menu_like")
 public class Like {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
