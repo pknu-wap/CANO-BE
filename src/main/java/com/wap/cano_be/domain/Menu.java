@@ -32,10 +32,10 @@ public class Menu {
     @Column(name = "count")
     private Map<String, Integer> aromas = new HashMap<>();
 
-    @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
-    @OneToMany(mappedBy = "like", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Like> likes = new ArrayList<>();
 
     public Menu() {}
