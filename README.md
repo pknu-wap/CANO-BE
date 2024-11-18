@@ -16,27 +16,12 @@ spring.jpa.show-sql=true
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.properties.hibernate.format_sql=true
 
+# Redis
+spring.data.redis.host=localhost
+spring.data.redis.port=6379
+
 # JWT
 jwt.secret={SECRET_KEY}
-
-# GOOGLE
-spring.security.oauth2.client.registration.google.client-id={현재 안 씀, 아무 값이나 입력}
-spring.security.oauth2.client.registration.google.client-secret={현재 안 씀, 아무 값이나 입력}
-spring.security.oauth2.client.registration.google.scope=email, profile
-
-# KAKAO
-spring.security.oauth2.client.registration.kakao.client-id={현재 안 씀, 아무 값이나 입력}
-spring.security.oauth2.client.registration.kakao.client-secret={현재 안 씀, 아무 값이나 입력}
-spring.security.oauth2.client.registration.kakao.client-authentication-method=client_secret_post
-spring.security.oauth2.client.registration.kakao.redirect-uri={현재 안 씀, 아무 값이나 입력}
-spring.security.oauth2.client.registration.kakao.authorization-grant-type=authorization_code
-spring.security.oauth2.client.registration.kakao.client-name=kakao
-spring.security.oauth2.client.registration.kakao.scope=profile_nickname, profile_image
-
-spring.security.oauth2.client.provider.kakao.authorization-uri=https://kauth.kakao.com/oauth/authorize
-spring.security.oauth2.client.provider.kakao.token-uri=https://kauth.kakao.com/oauth/token
-spring.security.oauth2.client.provider.kakao.user-info-uri=https://kapi.kakao.com/v2/user/me
-spring.security.oauth2.client.provider.kakao.user-name-attribute=id
 ```
 
 ## 🗃 팀 위키
