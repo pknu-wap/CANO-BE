@@ -95,22 +95,22 @@ public class MenuService {
     }
 
     // 아로마로 메뉴 조회
-    @ReadOnlyProperty
-    public List<MenuAromasResponseDto> getMenuByAromas(List<String> aromas){
-        List<Menu> menus = menuRepository.findAllByAromas(aromas);
-        if(menus.isEmpty()){
-            return null;
-        }
-        return menus.stream()
-                .map(menu -> MenuAromasResponseDto.builder()
-                        .name(menu.getName())
-                        .score(menu.getScore())
-                        .aromas(menu.getAromas())
-                        .imageUrl(menu.getImageUrl())
-                        .build()
-                )
-                .collect(Collectors.toList());
-    }
+//    @ReadOnlyProperty
+//    public List<MenuAromasResponseDto> getMenuByAromas(List<String> aromas){
+//        List<Menu> menus = menuRepository.findAllByAromas(aromas);
+//        if(menus.isEmpty()){
+//            return null;
+//        }
+//        return menus.stream()
+//                .map(menu -> MenuAromasResponseDto.builder()
+//                        .name(menu.getName())
+//                        .score(menu.getScore())
+//                        .aromas(menu.getAromas())
+//                        .imageUrl(menu.getImageUrl())
+//                        .build()
+//                )
+//                .collect(Collectors.toList());
+//    }
 
     // 검색어로 메뉴 조회
     // 검색어는 메뉴명으로 가정
@@ -131,7 +131,7 @@ public class MenuService {
                         .bitterness(menu.getBitterness())
                         .sweetness(menu.getSweetness())
                         .imageUrl(menu.getImageUrl())
-                        .aromas(menu.getAromas())
+//                        .aromas(menu.getAromas())
                         .score(menu.getScore())
                         .build()
                 )
@@ -153,7 +153,7 @@ public class MenuService {
                 .body(menu.getBody())
                 .bitterness(menu.getBitterness())
                 .sweetness(menu.getSweetness())
-                .aromas(menu.getAromas())
+//                .aromas(menu.getAromas())
                 .score(menu.getScore())
                 .build();
     }

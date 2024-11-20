@@ -52,16 +52,16 @@ public class MenuController {
     }
 
     // 메뉴 조회 - 아로마
-    @GetMapping("/search/aroma")
-    public ResponseEntity<?> getMenusByAromas(
-            @RequestParam List<String> aromas
-    ){
-        List<MenuAromasResponseDto> responseDtos = menuService.getMenuByAromas(aromas);
-        if(responseDtos.isEmpty()){
-            return getNoDataResponse();
-        }
-        return ResponseEntity.ok().body(responseDtos);
-    }
+//    @GetMapping("/search/aroma")
+//    public ResponseEntity<?> getMenusByAromas(
+//            @RequestParam List<String> aromas
+//    ){
+//        List<MenuAromasResponseDto> responseDtos = menuService.getMenuByAromas(aromas);
+//        if(responseDtos.isEmpty()){
+//            return getNoDataResponse();
+//        }
+//        return ResponseEntity.ok().body(responseDtos);
+//    }
 
     // 검색어로 메뉴 조회
     @GetMapping("/search/keyword")
@@ -99,16 +99,16 @@ public class MenuController {
     }
 
     // 리뷰 등록
-    @PostMapping("/{menu_id}/review")
-    public ResponseEntity<?> writeReview(
-            @PathVariable("menu_id") long id,
-            @RequestBody ReviewRequestDto reviewRequestDto,
-            @AuthenticationPrincipal PrincipalDetail principalDetail){
-        long memberId = principalDetail.getMember().getSocialId();
-        reviewService.createReview(reviewRequestDto, id, memberId);
-
-        return getSuccessResponse();
-    }
+//    @PostMapping("/{menu_id}/review")
+//    public ResponseEntity<?> writeReview(
+//            @PathVariable("menu_id") long id,
+//            @RequestBody ReviewRequestDto reviewRequestDto,
+//            @AuthenticationPrincipal PrincipalDetail principalDetail){
+//        long memberId = principalDetail.getMember().getSocialId();
+//        reviewService.createReview(reviewRequestDto, id, memberId);
+//
+//        return getSuccessResponse();
+//    }
 
     // 리뷰 삭제
     @DeleteMapping("/{menu_id}/review")
