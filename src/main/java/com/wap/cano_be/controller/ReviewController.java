@@ -42,7 +42,7 @@ public class ReviewController {
         return ResponseEntity.ok(reviewRequestDto);
     }
 
-    @PostMapping("/menus/{menu_id}/review")
+    @PostMapping("/menus/{menu_id}/reviews")
     public ResponseEntity<ReviewResponseDto> createReview(
             @RequestBody ReviewRequestDto requestDto,
             @PathVariable("menu_id") long menuId,
