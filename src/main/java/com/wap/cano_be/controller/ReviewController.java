@@ -42,6 +42,13 @@ public class ReviewController {
         return ResponseEntity.ok(reviewRequestDto);
     }
 
+    @GetMapping("/menus/{menu_id}/reviews")
+    public ResponseEntity<List<ReviewResponseDto>> getReviewsByMenuId(
+            @PathVariable("menu_id") long menuId
+    ) {
+        return reviewService.getReviewsByMenuId(menuId);
+    }
+
     @PostMapping("/menus/{menu_id}/reviews")
     public ResponseEntity<ReviewResponseDto> createReview(
             @RequestBody ReviewRequestDto requestDto,
