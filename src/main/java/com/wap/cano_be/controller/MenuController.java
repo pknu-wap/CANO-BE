@@ -2,19 +2,16 @@ package com.wap.cano_be.controller;
 
 import com.wap.cano_be.domain.PrincipalDetail;
 import com.wap.cano_be.dto.menu.*;
-import com.wap.cano_be.dto.review.ReviewRequestDto;
 import com.wap.cano_be.service.impl.LikeService;
 import com.wap.cano_be.service.impl.MenuService;
 import com.wap.cano_be.service.impl.ReviewService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -91,11 +88,16 @@ public class MenuController {
 
     // 메뉴 등록
     @PostMapping
-    public ResponseEntity<?> createMenu(@RequestBody MenuRequestDto menuRequestDto){
+    public ResponseEntity<MenuResponseDto> createMenu(@RequestBody MenuRequestDto menuRequestDto){
         log.info("========POST MENU========");
         log.info("menuRequestDto: {}", menuRequestDto);
-        menuService.saveMenu(menuRequestDto);
-        return getSuccessResponse();
+        return menuService.createMenu(menuRequestDto);
+    }
+
+    // 메뉴 조회
+    @GetMapping("/{menu_id}")
+    public ResponseEntity<MenuResponseDto> getMenuById(@PathVariable("menu_id") long menuId) {
+        return menuService.getMenuById(menuId);
     }
 
     // 리뷰 등록

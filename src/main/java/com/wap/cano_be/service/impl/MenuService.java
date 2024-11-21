@@ -1,33 +1,32 @@
 package com.wap.cano_be.service.impl;
 
 import com.wap.cano_be.domain.Menu;
+import com.wap.cano_be.domain.Review;
 import com.wap.cano_be.domain.enums.Degree;
-import com.wap.cano_be.dto.menu.MenuAromasResponseDto;
-import com.wap.cano_be.dto.menu.MenuAttributeResponseDto;
 import com.wap.cano_be.dto.menu.MenuRequestDto;
 import com.wap.cano_be.dto.menu.MenuResponseDto;
 import com.wap.cano_be.repository.MenuRepository;
+import com.wap.cano_be.repository.ReviewRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.OptionalDouble;
 
 @Slf4j
 @Transactional
 @Service
+@RequiredArgsConstructor
 public class MenuService {
     private final MenuRepository menuRepository;
+    private final ReviewRepository reviewRepository;
 
-    public MenuService(MenuRepository menuRepository) {
-        this.menuRepository = menuRepository;
-    }
-
-    private Degree getDegree(String degree){
-        for (Degree deg:Degree.values()) {
-            if (degree.equalsIgnoreCase(deg.name())){
+    private Degree getDegree(String degree) {
+        for (Degree deg : Degree.values()) {
+            if (degree.equalsIgnoreCase(deg.name())) {
                 return deg;
             }
         }
@@ -159,11 +158,41 @@ public class MenuService {
 //    }
 
     // 메뉴 등록
-    public void saveMenu(MenuRequestDto menuRequestDto){
-        menuRepository.save(Menu.builder()
-                        .name(menuRequestDto.cafeName() + " " + menuRequestDto.name())
-                        .imageUrl(menuRequestDto.imageUrl())
-                        .price(menuRequestDto.price())
+    public ResponseEntity<MenuResponseDto> createMenu(MenuRequestDto menuRequestDto) {
+        Menu menu = Menu.builder()
+                .name(menuRequestDto.cafeName() + " " + menuRequestDto.name())
+                .imageUrl(menuRequestDto.imageUrl())
+                .price(menuRequestDto.price())
+                .build();
+
+        menu = menuRepository.save(menu);
+
+        return ResponseEntity.ok().body(MenuResponseDto.builder()
+                .id(menu.getId())
+                .name(menu.getName())
+                .price(menu.getPrice())
+                .build());
+    }
+
+    // 메뉴 조회
+    public ResponseEntity<MenuResponseDto> getMenuById(Long menuId) {
+        Menu menu = menuRepository.findById(menuId).orElseThrow(() -> new IllegalArgumentException("Menu not found"));
+
+        Double averageScore = menu.getAverageScore();
+        Double averageAcidity = menu.getAverageAcidity();
+        Double averageBody = menu.getAverageBody();
+        Double averageBitterness = menu.getAverageBitterness();
+        Double averageSweetness = menu.getAverageSweetness();
+
+        return ResponseEntity.ok().body(MenuResponseDto.builder()
+                .id(menu.getId())
+                .name(menu.getName())
+                .price(menu.getPrice())
+                .score(averageScore)
+                .acidity(averageAcidity)
+                .body(averageBody)
+                .bitterness(averageBitterness)
+                .sweetness(averageSweetness)
                 .build());
     }
 
