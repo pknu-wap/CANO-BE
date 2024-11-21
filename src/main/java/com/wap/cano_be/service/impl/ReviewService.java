@@ -13,6 +13,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -110,15 +111,14 @@ public class ReviewService {
 //    }
 
     // 리뷰 삭제
-    public void deleteReview(long menuId, long memberId){
-        Menu menu = menuRepository.findById(menuId);
-        Member member = memberRepository.findBySocialId(memberId).orElseThrow(()->new IllegalArgumentException("Member not found"));
+    public ResponseEntity<?> deleteReview(long reviewId, long memberId){
+        Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new IllegalArgumentException("Review not found. reviewId: " + reviewId));
 
-        if(menu == null){
-            return;
-        }
+        if (review.getMember().getId() != memberId) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
-        reviewRepository.deleteByMemberAndMenu(member, menu);
+        reviewRepository.delete(review);
+
+        return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<ReviewResponseDto> createReview(ReviewRequestDto requestDto, long menuId, long memberId) {
