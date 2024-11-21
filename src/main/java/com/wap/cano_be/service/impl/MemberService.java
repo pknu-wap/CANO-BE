@@ -5,6 +5,7 @@ import com.wap.cano_be.domain.Member;
 import com.wap.cano_be.dto.member.MemberRequestDto;
 import com.wap.cano_be.dto.member.MemberResponseDto;
 import com.wap.cano_be.domain.enums.MemberRole;
+import com.wap.cano_be.dto.member.MemberUpdateRequestDto;
 import com.wap.cano_be.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -44,5 +45,26 @@ public class MemberService {
 
         MemberResponseDto responseDto = new MemberResponseDto(member.get().getName(), member.get().getEmail(), member.get().getSocialId(), member.get().getProfileImageUrl());
         return ResponseEntity.ok().body(responseDto);
+    }
+
+    public ResponseEntity<MemberResponseDto> updateMember(Long memberId, MemberUpdateRequestDto requestDto) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Member not found. memberId: " + memberId));
+        member.setName(requestDto.getName());
+
+        if (requestDto.getAcidity() != null) {
+            member.setAcidity(requestDto.getAcidity());
+        }
+        if (requestDto.getBody() != null) {
+            member.setBody(requestDto.getBody());
+        }
+        if (requestDto.getBitterness() != null) {
+            member.setBitterness(requestDto.getBitterness());
+        }
+        if (requestDto.getSweetness() != null) {
+            member.setSweetness(requestDto.getSweetness());
+        }
+
+        member = memberRepository.save(member);
+        return ResponseEntity.ok().body(new MemberResponseDto(member));
     }
 }
