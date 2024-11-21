@@ -1,5 +1,6 @@
 package com.wap.cano_be.controller;
 
+import com.wap.cano_be.domain.Menu;
 import com.wap.cano_be.domain.PrincipalDetail;
 import com.wap.cano_be.dto.menu.*;
 import com.wap.cano_be.service.impl.LikeService;
@@ -12,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -60,15 +62,15 @@ public class MenuController {
 //        return ResponseEntity.ok().body(responseDtos);
 //    }
 
-    // 검색어로 메뉴 조회
-//    @GetMapping("/search/keyword")
-//    public ResponseEntity<?> getMenuByKeyword(@RequestParam("query") String keyword){
-//        List<MenuResponseDto> menus = menuService.getMenuByKeyword(keyword);
-//        if(menus == null || menus.isEmpty()){
-//            return getNoDataResponse();
-//        }
-//        return ResponseEntity.ok().body(menus);
-//    }
+    // 메뉴 검색
+    @GetMapping("/search")
+    public ResponseEntity<List<MenuResponseDto>> getMenuByKeyword(
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) String attribute,
+            @RequestParam(required = false) String degree
+    ){
+        return menuService.searchMenus(query, attribute, degree);
+    }
 //
 //    // 메뉴 데이터 조회
 //    @GetMapping("/{menu_id}")

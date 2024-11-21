@@ -1,10 +1,7 @@
 package com.wap.cano_be.dto.menu;
 
-import com.wap.cano_be.domain.Menu;
 import lombok.Builder;
-
 import java.util.Map;
-import java.util.OptionalDouble;
 
 @Builder
 public record MenuResponseDto(
