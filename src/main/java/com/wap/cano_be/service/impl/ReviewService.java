@@ -140,4 +140,15 @@ public class ReviewService {
 
         return ResponseEntity.ok().body(new ReviewResponseDto(review));
     }
+
+    public ResponseEntity<List<ReviewResponseDto>> getReviewsByMenuId(long menuId) {
+        Menu menu = menuRepository.findById(menuId);
+        if (menu == null) throw new IllegalArgumentException("Menu with id: " + menuId + " is not found.");
+        List<Review> reviews = reviewRepository.findAllByMenu(menu);
+        List<ReviewResponseDto> response = reviews.stream()
+                .map(ReviewResponseDto::new)
+                .toList();
+
+        return ResponseEntity.ok().body(response);
+    }
 }

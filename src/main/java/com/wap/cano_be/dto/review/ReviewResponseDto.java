@@ -10,6 +10,7 @@ import java.util.List;
 @Builder
 public record ReviewResponseDto(
         Long id,
+        String memberName,
         String contents,
         Double score,
         Degree acidity,
@@ -24,6 +25,7 @@ public record ReviewResponseDto(
     public ReviewResponseDto(Review review) {
         this(
                 review.getId(),
+                review.getMember().getName(),
                 review.getContents(),
                 review.getScore(),
                 review.getAcidity(),
