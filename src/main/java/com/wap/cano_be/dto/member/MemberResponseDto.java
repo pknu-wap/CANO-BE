@@ -19,6 +19,7 @@ public class MemberResponseDto extends ResponseDto {
     private Degree body;
     private Degree bitterness;
     private Degree sweetness;
+    private boolean onboarded;
 
     @Builder
     public MemberResponseDto(String name, String email, Long socialId, String profileImageUrl) {
@@ -38,6 +39,7 @@ public class MemberResponseDto extends ResponseDto {
         this.body = member.getBody();
         this.bitterness = member.getBitterness();
         this.sweetness = member.getSweetness();
+        this.onboarded = member.isOnboarded();
     }
 
     public static ResponseEntity<ResponseDto> duplicatedMember(){

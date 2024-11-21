@@ -4,6 +4,8 @@ import com.wap.cano_be.domain.enums.Degree;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -28,11 +30,13 @@ public class Review {
     private Degree sweetness;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Member member;
 
     @ManyToOne
     @JoinColumn(name = "menu_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Menu menu;
 
     @ElementCollection
