@@ -1,5 +1,6 @@
 package com.wap.cano_be.domain;
 
+import com.wap.cano_be.domain.enums.Degree;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,15 +22,10 @@ public class Review {
     @Lob
     private String contents;
     private Double score;
-    private Double acidity;
-    private Double body;
-    private Double bitterness;
-    private Double sweetness;
-
-    @ElementCollection
-    @CollectionTable(name = "review_aromas", joinColumns = @JoinColumn(name = "review_id"))
-    @Column(name = "aromas")
-    private List<String> aromas = new ArrayList<>();
+    private Degree acidity;
+    private Degree body;
+    private Degree bitterness;
+    private Degree sweetness;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
@@ -52,7 +48,7 @@ public class Review {
     public Review(){}
 
     @Builder
-    public Review(String contents, Double score, Double acidity, Double body, Double bitterness, Double sweetness, Member member, Menu menu, List<String> imageUrls, List<String> aromas, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Review(String contents, Double score, Degree acidity, Degree body, Degree bitterness, Degree sweetness, Member member, Menu menu, List<String> imageUrls, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.contents = contents;
         this.score = score;
         this.acidity = acidity;
@@ -62,9 +58,7 @@ public class Review {
         this.member = member;
         this.menu = menu;
         this.imageUrls = imageUrls;
-        this.aromas = aromas;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
-
 }

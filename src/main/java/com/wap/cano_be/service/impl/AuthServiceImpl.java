@@ -46,26 +46,28 @@ public class AuthServiceImpl implements AuthService {
         Member member = getOrCreateMemberFromKakaoToken(email, token);
 
         // 토큰 생성
-        String accessToken = createAccessToken(member.getEmail(), member.getRole());
-        String refreshToken = createRefreshTokenAndSave(member.getEmail(), member.getRole(), member.getId());
+        String accessToken = createAccessToken(member, member.getRole());
+        String refreshToken = createRefreshTokenAndSave(member, member.getRole());
 
         return ResponseEntity.ok().body(new LoginResponseDto(accessToken, refreshToken));
     }
 
-    private String createAccessToken(String email, MemberRole role) {
+    private String createAccessToken(Member member, MemberRole role) {
         Map<String, Object> accessTokenClaims = new HashMap<>();
-        accessTokenClaims.put("email", email);
+        accessTokenClaims.put("id", member.getId().toString());
+        accessTokenClaims.put("email", member.getEmail());
         accessTokenClaims.put("role", role);
         return JwtUtils.generateToken(accessTokenClaims, JwtConstants.ACCESS_EXP_TIME);
     }
 
-    private String createRefreshTokenAndSave(String email, MemberRole role, long id) {
+    private String createRefreshTokenAndSave(Member member, MemberRole role) {
         Map<String, Object> refreshTokenClaims = new HashMap<>();
-        refreshTokenClaims.put("email", email);
+        refreshTokenClaims.put("id", member.getId().toString());
+        refreshTokenClaims.put("email", member.getEmail());
         refreshTokenClaims.put("role", role);
         String refreshToken = JwtUtils.generateToken(refreshTokenClaims, JwtConstants.REFRESH_EXP_TIME);
 
-        RefreshToken refreshTokenForRedis = new RefreshToken(refreshToken, id);
+        RefreshToken refreshTokenForRedis = new RefreshToken(refreshToken, member.getId());
         refreshTokenRepository.save(refreshTokenForRedis);
 
         return refreshToken;
@@ -113,14 +115,14 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public ResponseEntity<ReissueResponseDto> reissue(ReissueRequestDto requestDto) {
         Claims claims = JwtUtils.validateToken(requestDto.getRefreshToken());
-        String email = claims.get("email").toString();
+        Long memberId = Long.valueOf(claims.get("id").toString());
 
-        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("Member with email: " + email + " is not found."));
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Member with id: " + memberId + " is not found."));
 
         deleteExistingRefreshToken(requestDto.getRefreshToken());
 
-        String accessToken = createAccessToken(member.getEmail(), member.getRole());
-        String refreshToken = createRefreshTokenAndSave(member.getEmail(), member.getRole(), member.getId());
+        String accessToken = createAccessToken(member, member.getRole());
+        String refreshToken = createRefreshTokenAndSave(member, member.getRole());
 
         return ResponseEntity.ok().body(new ReissueResponseDto(accessToken, refreshToken));
     }
