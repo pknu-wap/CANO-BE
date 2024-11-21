@@ -9,9 +9,11 @@ import com.wap.cano_be.dto.review.ReviewResponseDto;
 import com.wap.cano_be.repository.MemberRepository;
 import com.wap.cano_be.repository.MenuRepository;
 import com.wap.cano_be.repository.ReviewRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -84,28 +86,28 @@ public class ReviewService {
 //    }
 
     // 메뉴로부터 리뷰 조회
-    @ReadOnlyProperty
-    public List<ReviewResponseDto> getReviewsByMenuId(long menuId){
-        Menu menu = menuRepository.findById(menuId);
-
-        if(menu == null){
-            return null;
-        }
-        List<Review> reviews = reviewRepository.findAllByMenu(menu);
-        if(reviews == null || reviews.isEmpty()){
-            return null;
-        }
-
-        return reviews.stream()
-                .map(review -> ReviewResponseDto.builder()
-                        .memberName(review.getMember().getName())
-                        .writtenDate(review.getUpdatedAt() != null ?
-                                review.getUpdatedAt() : review.getCreatedAt())
-                        .contents(review.getContents())
-                        .imageUrls(review.getImageUrls())
-                        .build())
-                .collect(Collectors.toList());
-    }
+//    @ReadOnlyProperty
+//    public List<ReviewResponseDto> getReviewsByMenuId(long menuId){
+//        Menu menu = menuRepository.findById(menuId);
+//
+//        if(menu == null){
+//            return null;
+//        }
+//        List<Review> reviews = reviewRepository.findAllByMenu(menu);
+//        if(reviews == null || reviews.isEmpty()){
+//            return null;
+//        }
+//
+//        return reviews.stream()
+//                .map(review -> ReviewResponseDto.builder()
+//                        .memberName(review.getMember().getName())
+//                        .writtenDate(review.getUpdatedAt() != null ?
+//                                review.getUpdatedAt() : review.getCreatedAt())
+//                        .contents(review.getContents())
+//                        .imageUrls(review.getImageUrls())
+//                        .build())
+//                .collect(Collectors.toList());
+//    }
 
     // 리뷰 삭제
     public void deleteReview(long menuId, long memberId){
@@ -117,5 +119,25 @@ public class ReviewService {
         }
 
         reviewRepository.deleteByMemberAndMenu(member, menu);
+    }
+
+    public ResponseEntity<ReviewResponseDto> createReview(ReviewRequestDto requestDto, long menuId, long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("멤버가 없습니다. memberId: " + memberId));
+        Menu menu = menuRepository.findById(menuId);
+
+        Review review = Review.builder()
+                .contents(requestDto.contents())
+                .score(requestDto.score())
+                .acidity(requestDto.acidity())
+                .body(requestDto.body())
+                .bitterness(requestDto.bitterness())
+                .sweetness(requestDto.sweetness())
+                .member(member)
+                .menu(menu)
+                .build();
+
+        reviewRepository.save(review);
+
+        return ResponseEntity.ok().body(new ReviewResponseDto(review));
     }
 }

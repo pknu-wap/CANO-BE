@@ -1,15 +1,13 @@
 package com.wap.cano_be.dto.review;
 
-import java.util.List;
+import com.wap.cano_be.domain.enums.Degree;
 
 public record ReviewRequestDto(
-        double score,
+        Double score,
         String contents,
-        List<String> imageUrls,
-        String acidity,
-        String body,
-        String bitterness,
-        String sweetness,
-        List<String> aromas
+        Degree acidity,
+        Degree body,
+        Degree bitterness,
+        Degree sweetness
 ) {
 }

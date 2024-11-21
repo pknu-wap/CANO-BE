@@ -35,64 +35,64 @@ public class MenuService {
     }
 
     // 메뉴 조회 (attribute 한 개로)
-    @ReadOnlyProperty
-    public List<MenuAttributeResponseDto> getMenuByAttribute(String attribute, String degree) {
-        List<Menu> menus = menuRepository.findAllByAttribute(attribute, getDegree(degree));
-
-        if(menus.isEmpty()){
-            return null;
-        }
-
-        switch (attribute.toLowerCase()){
-            case "acidity"-> menus.stream()
-                    .map(menu -> MenuAttributeResponseDto
-                            .builder()
-                            .id(menu.getId())
-                            .name(menu.getName())
-                            .score(menu.getScore())
-                            .attribute(attribute.toLowerCase())
-                            .degree(menu.getAcidity())
-                            .image_url(menu.getImageUrl())
-                            .build())
-                    .collect(Collectors.toList());
-            case "body"->menus.stream()
-                    .map(menu -> MenuAttributeResponseDto
-                            .builder()
-                            .id(menu.getId())
-                            .name(menu.getName())
-                            .score(menu.getScore())
-                            .attribute(attribute.toLowerCase())
-                            .degree(menu.getBody())
-                            .image_url(menu.getImageUrl())
-                            .build())
-                    .collect(Collectors.toList());
-            case "bitterness"->menus.stream()
-                    .map(menu -> MenuAttributeResponseDto
-                            .builder()
-                            .id(menu.getId())
-                            .name(menu.getName())
-                            .score(menu.getScore())
-                            .attribute(attribute.toLowerCase())
-                            .degree(menu.getBitterness())
-                            .image_url(menu.getImageUrl())
-                            .build())
-                    .collect(Collectors.toList());
-            case "sweetness"->menus.stream()
-                    .map(menu -> MenuAttributeResponseDto
-                            .builder()
-                            .id(menu.getId())
-                            .name(menu.getName())
-                            .score(menu.getScore())
-                            .attribute(attribute.toLowerCase())
-                            .degree(menu.getSweetness())
-                            .image_url(menu.getImageUrl())
-                            .build())
-                    .collect(Collectors.toList());
-            default -> {
-            }
-        }
-        return null;
-    }
+//    @ReadOnlyProperty
+//    public List<MenuAttributeResponseDto> getMenuByAttribute(String attribute, String degree) {
+//        List<Menu> menus = menuRepository.findAllByAttribute(attribute, getDegree(degree));
+//
+//        if(menus.isEmpty()){
+//            return null;
+//        }
+//
+//        switch (attribute.toLowerCase()){
+//            case "acidity"-> menus.stream()
+//                    .map(menu -> MenuAttributeResponseDto
+//                            .builder()
+//                            .id(menu.getId())
+//                            .name(menu.getName())
+//                            .score(menu.getScore())
+//                            .attribute(attribute.toLowerCase())
+//                            .degree(menu.getAcidity())
+//                            .image_url(menu.getImageUrl())
+//                            .build())
+//                    .collect(Collectors.toList());
+//            case "body"->menus.stream()
+//                    .map(menu -> MenuAttributeResponseDto
+//                            .builder()
+//                            .id(menu.getId())
+//                            .name(menu.getName())
+//                            .score(menu.getScore())
+//                            .attribute(attribute.toLowerCase())
+//                            .degree(menu.getBody())
+//                            .image_url(menu.getImageUrl())
+//                            .build())
+//                    .collect(Collectors.toList());
+//            case "bitterness"->menus.stream()
+//                    .map(menu -> MenuAttributeResponseDto
+//                            .builder()
+//                            .id(menu.getId())
+//                            .name(menu.getName())
+//                            .score(menu.getScore())
+//                            .attribute(attribute.toLowerCase())
+//                            .degree(menu.getBitterness())
+//                            .image_url(menu.getImageUrl())
+//                            .build())
+//                    .collect(Collectors.toList());
+//            case "sweetness"->menus.stream()
+//                    .map(menu -> MenuAttributeResponseDto
+//                            .builder()
+//                            .id(menu.getId())
+//                            .name(menu.getName())
+//                            .score(menu.getScore())
+//                            .attribute(attribute.toLowerCase())
+//                            .degree(menu.getSweetness())
+//                            .image_url(menu.getImageUrl())
+//                            .build())
+//                    .collect(Collectors.toList());
+//            default -> {
+//            }
+//        }
+//        return null;
+//    }
 
     // 아로마로 메뉴 조회
 //    @ReadOnlyProperty
@@ -114,49 +114,49 @@ public class MenuService {
 
     // 검색어로 메뉴 조회
     // 검색어는 메뉴명으로 가정
-    @ReadOnlyProperty
-    public List<MenuResponseDto> getMenuByKeyword(String keyword){
-        List<Menu> menus = menuRepository.findAllByKeyword(keyword.toLowerCase());
-        if(menus.isEmpty()){
-            return null;
-        }
-        
-        return menus.stream()
-                .map(menu -> MenuResponseDto.builder()
-                        .id(menu.getId())
-                        .name(menu.getName())
-                        .price(menu.getPrice())
-                        .acidity(menu.getAcidity())
-                        .body(menu.getBody())
-                        .bitterness(menu.getBitterness())
-                        .sweetness(menu.getSweetness())
-                        .imageUrl(menu.getImageUrl())
-//                        .aromas(menu.getAromas())
-                        .score(menu.getScore())
-                        .build()
-                )
-                .collect(Collectors.toList());
-    }
+//    @ReadOnlyProperty
+//    public List<MenuResponseDto> getMenuByKeyword(String keyword){
+//        List<Menu> menus = menuRepository.findAllByKeyword(keyword.toLowerCase());
+//        if(menus.isEmpty()){
+//            return null;
+//        }
+//
+//        return menus.stream()
+//                .map(menu -> MenuResponseDto.builder()
+//                        .id(menu.getId())
+//                        .name(menu.getName())
+//                        .price(menu.getPrice())
+//                        .acidity(menu.getAcidity())
+//                        .body(menu.getBody())
+//                        .bitterness(menu.getBitterness())
+//                        .sweetness(menu.getSweetness())
+//                        .imageUrl(menu.getImageUrl())
+////                        .aromas(menu.getAromas())
+//                        .score(menu.getScore())
+//                        .build()
+//                )
+//                .collect(Collectors.toList());
+//    }
 
     // 메뉴 데이터 조회
-    @ReadOnlyProperty
-    public MenuResponseDto getMenuInfo(long id){
-        Menu menu = menuRepository.findById(id);
-        if(menu == null) return null;
-
-        return MenuResponseDto.builder()
-                .id(menu.getId())
-                .name(menu.getName())
-                .price(menu.getPrice())
-                .imageUrl(menu.getImageUrl())
-                .acidity(menu.getAcidity())
-                .body(menu.getBody())
-                .bitterness(menu.getBitterness())
-                .sweetness(menu.getSweetness())
-//                .aromas(menu.getAromas())
-                .score(menu.getScore())
-                .build();
-    }
+//    @ReadOnlyProperty
+//    public MenuResponseDto getMenuInfo(long id){
+//        Menu menu = menuRepository.findById(id);
+//        if(menu == null) return null;
+//
+//        return MenuResponseDto.builder()
+//                .id(menu.getId())
+//                .name(menu.getName())
+//                .price(menu.getPrice())
+//                .imageUrl(menu.getImageUrl())
+//                .acidity(menu.getAcidity())
+//                .body(menu.getBody())
+//                .bitterness(menu.getBitterness())
+//                .sweetness(menu.getSweetness())
+////                .aromas(menu.getAromas())
+//                .score(menu.getScore())
+//                .build();
+//    }
 
     // 메뉴 등록
     public void saveMenu(MenuRequestDto menuRequestDto){

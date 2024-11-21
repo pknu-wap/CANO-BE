@@ -31,11 +31,14 @@ public class PrincipalDetail implements UserDetails {
     public Map<String, Object> getMemberInfo() {
         Map<String, Object> info = new HashMap<>();
         info.put("name", member.getName());
+        info.put("id", member.getId());
         info.put("socialId", member.getSocialId());
         info.put("email", member.getEmail());
         info.put("role", member.getRole());
         return info;
     }
+
+    public Long getId() {return member.getId();}
 
     public String getEmail() {return member.getEmail();}
 

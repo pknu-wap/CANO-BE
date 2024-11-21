@@ -39,17 +39,17 @@ public class MenuController {
     }
 
     // 메뉴 조회
-    @GetMapping("/attribute")
-    public ResponseEntity<?> getMenusByAttribute(
-            @RequestParam String type,
-            @RequestParam String degree
-            ) {
-        List<MenuAttributeResponseDto> menus = menuService.getMenuByAttribute(type, degree);
-        if(menus == null || menus.isEmpty()){
-            return getNoDataResponse();
-        }
-        return ResponseEntity.ok().body(menus);
-    }
+//    @GetMapping("/attribute")
+//    public ResponseEntity<?> getMenusByAttribute(
+//            @RequestParam String type,
+//            @RequestParam String degree
+//            ) {
+//        List<MenuAttributeResponseDto> menus = menuService.getMenuByAttribute(type, degree);
+//        if(menus == null || menus.isEmpty()){
+//            return getNoDataResponse();
+//        }
+//        return ResponseEntity.ok().body(menus);
+//    }
 
     // 메뉴 조회 - 아로마
 //    @GetMapping("/search/aroma")
@@ -64,24 +64,24 @@ public class MenuController {
 //    }
 
     // 검색어로 메뉴 조회
-    @GetMapping("/search/keyword")
-    public ResponseEntity<?> getMenuByKeyword(@RequestParam("query") String keyword){
-        List<MenuResponseDto> menus = menuService.getMenuByKeyword(keyword);
-        if(menus == null || menus.isEmpty()){
-            return getNoDataResponse();
-        }
-        return ResponseEntity.ok().body(menus);
-    }
-
-    // 메뉴 데이터 조회
-    @GetMapping("/{menu_id}")
-    public ResponseEntity<?> getMenuInfo(@PathVariable("menu_id") long id){
-        MenuResponseDto menuResponseDto = menuService.getMenuInfo(id);
-        if(menuResponseDto == null){
-            return getNoDataResponse();
-        }
-        return ResponseEntity.ok().body(menuResponseDto);
-    }
+//    @GetMapping("/search/keyword")
+//    public ResponseEntity<?> getMenuByKeyword(@RequestParam("query") String keyword){
+//        List<MenuResponseDto> menus = menuService.getMenuByKeyword(keyword);
+//        if(menus == null || menus.isEmpty()){
+//            return getNoDataResponse();
+//        }
+//        return ResponseEntity.ok().body(menus);
+//    }
+//
+//    // 메뉴 데이터 조회
+//    @GetMapping("/{menu_id}")
+//    public ResponseEntity<?> getMenuInfo(@PathVariable("menu_id") long id){
+//        MenuResponseDto menuResponseDto = menuService.getMenuInfo(id);
+//        if(menuResponseDto == null){
+//            return getNoDataResponse();
+//        }
+//        return ResponseEntity.ok().body(menuResponseDto);
+//    }
 
     private ResponseEntity<Map<String, String>> getSuccessResponse() {
         Map<String, String> response = new HashMap<>();
@@ -134,26 +134,26 @@ public class MenuController {
     }
 
     // 좋아요
-    @PostMapping("/{menu_id}/like")
-    public ResponseEntity<?> setLike(
-            @PathVariable("menu_id") long id,
-            @RequestBody MenuLikeDto menuLikeDto,
-            @AuthenticationPrincipal PrincipalDetail principalDetail){
-
-        if(menuLikeDto == null){
-            Map<String, String> response = new HashMap<>();
-            response.put("error", "잘못된 요청 양식 입니다.");
-            return ResponseEntity.badRequest().body(response);
-        }
-
-        Long memberId = principalDetail.getMember().getId();
-        if(memberId == null){
-            Map<String, String> response = new HashMap<>();
-            response.put("error", "유효하지 않은 사용자입니다.");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-        }
-
-        likeService.updateLike(memberId, id, menuLikeDto.like());
-        return getSuccessResponse();
-    }
+//    @PostMapping("/{menu_id}/like")
+//    public ResponseEntity<?> setLike(
+//            @PathVariable("menu_id") long id,
+//            @RequestBody MenuLikeDto menuLikeDto,
+//            @AuthenticationPrincipal PrincipalDetail principalDetail){
+//
+//        if(menuLikeDto == null){
+//            Map<String, String> response = new HashMap<>();
+//            response.put("error", "잘못된 요청 양식 입니다.");
+//            return ResponseEntity.badRequest().body(response);
+//        }
+//
+//        Long memberId = principalDetail.getMember().getId();
+//        if(memberId == null){
+//            Map<String, String> response = new HashMap<>();
+//            response.put("error", "유효하지 않은 사용자입니다.");
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+//        }
+//
+//        likeService.updateLike(memberId, id, menuLikeDto.like());
+//        return getSuccessResponse();
+//    }
 }

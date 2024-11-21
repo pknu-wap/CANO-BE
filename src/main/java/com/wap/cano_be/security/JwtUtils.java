@@ -61,15 +61,16 @@ public class JwtUtils {
     public static Authentication getAuthentication(String token) {
         Claims claims = validateToken(token);
 
+        Long id = Long.parseLong((String) claims.get("id"));
         String email = (String) claims.get("email");
-        String name = (String) claims.get("name");
         String role = (String) claims.get("role");
+
         if(role == null){
             throw new IllegalArgumentException("Role이 등록되지 않았습니다.");
         }
         MemberRole memberRole = MemberRole.valueOf(role);
 
-        Member member = Member.builder().email(email).name(name).role(memberRole).build();
+        Member member = Member.builder().id(id).email(email).role(memberRole).build();
         Set<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority(member.getRole().getValue()));
         PrincipalDetail principalDetail = new PrincipalDetail(member, authorities);
 

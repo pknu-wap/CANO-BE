@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/reviews")
+@RequestMapping("/api")
 public class ReviewController {
     private final ReviewService reviewService;
 
@@ -22,16 +22,16 @@ public class ReviewController {
     }
 
     // 메뉴로부터 리뷰 조회
-    @GetMapping("/menus/{menu_id}")
-    public ResponseEntity<?> getReviewById(@PathVariable("menu_id") long menuId) {
-        List<ReviewResponseDto> reviewResponseDtos = reviewService.getReviewsByMenuId(menuId);
-        if(reviewResponseDtos.isEmpty() || reviewResponseDtos == null){
-            Map<String, String> response = new HashMap<>();
-            response.put("error", "잘못된 요청 양식입니다.");
-            return ResponseEntity.badRequest().body(response);
-        }
-        return ResponseEntity.ok().body(reviewResponseDtos);
-    }
+//    @GetMapping("/menus/{menu_id}")
+//    public ResponseEntity<?> getReviewById(@PathVariable("menu_id") long menuId) {
+//        List<ReviewResponseDto> reviewResponseDtos = reviewService.getReviewsByMenuId(menuId);
+//        if(reviewResponseDtos.isEmpty() || reviewResponseDtos == null){
+//            Map<String, String> response = new HashMap<>();
+//            response.put("error", "잘못된 요청 양식입니다.");
+//            return ResponseEntity.badRequest().body(response);
+//        }
+//        return ResponseEntity.ok().body(reviewResponseDtos);
+//    }
 
     @PatchMapping("/{review_id}")
     public ResponseEntity<?> updateReview(
@@ -40,5 +40,13 @@ public class ReviewController {
             @AuthenticationPrincipal PrincipalDetail principalDetail) {
         //....
         return ResponseEntity.ok(reviewRequestDto);
+    }
+
+    @PostMapping("/menus/{menu_id}/review")
+    public ResponseEntity<ReviewResponseDto> createReview(
+            @RequestBody ReviewRequestDto requestDto,
+            @PathVariable("menu_id") long menuId,
+            @AuthenticationPrincipal PrincipalDetail principalDetail) {
+        return reviewService.createReview(requestDto, menuId, principalDetail.getMember().getId());
     }
 }
