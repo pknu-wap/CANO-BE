@@ -1,20 +1,20 @@
 package com.wap.cano_be.service.impl;
 
 import com.wap.cano_be.domain.Menu;
-import com.wap.cano_be.domain.Review;
 import com.wap.cano_be.domain.enums.Degree;
 import com.wap.cano_be.dto.menu.MenuRequestDto;
 import com.wap.cano_be.dto.menu.MenuResponseDto;
 import com.wap.cano_be.repository.MenuRepository;
-import com.wap.cano_be.repository.ReviewRepository;
+import com.wap.cano_be.repository.MenuSpecification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.OptionalDouble;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Transactional
@@ -22,7 +22,6 @@ import java.util.OptionalDouble;
 @RequiredArgsConstructor
 public class MenuService {
     private final MenuRepository menuRepository;
-    private final ReviewRepository reviewRepository;
 
     private Degree getDegree(String degree) {
         for (Degree deg : Degree.values()) {
@@ -178,22 +177,49 @@ public class MenuService {
     public ResponseEntity<MenuResponseDto> getMenuById(Long menuId) {
         Menu menu = menuRepository.findById(menuId).orElseThrow(() -> new IllegalArgumentException("Menu not found"));
 
-        Double averageScore = menu.getAverageScore();
-        Double averageAcidity = menu.getAverageAcidity();
-        Double averageBody = menu.getAverageBody();
-        Double averageBitterness = menu.getAverageBitterness();
-        Double averageSweetness = menu.getAverageSweetness();
+        return ResponseEntity.ok().body(mapToMenuResponseDto(menu));
+    }
 
-        return ResponseEntity.ok().body(MenuResponseDto.builder()
+    private MenuResponseDto mapToMenuResponseDto(Menu menu) {
+        return MenuResponseDto.builder()
                 .id(menu.getId())
                 .name(menu.getName())
                 .price(menu.getPrice())
-                .score(averageScore)
-                .acidity(averageAcidity)
-                .body(averageBody)
-                .bitterness(averageBitterness)
-                .sweetness(averageSweetness)
-                .build());
+                .score(menu.getAverageScore())
+                .acidity(menu.getAverageAcidity())
+                .body(menu.getAverageBody())
+                .bitterness(menu.getAverageBitterness())
+                .sweetness(menu.getAverageSweetness())
+                .imageUrl(menu.getImageUrl())
+                .build();
+    }
+
+    // 메뉴 검색
+    public ResponseEntity<List<MenuResponseDto>> searchMenus(String query, String attribute, String degree) {
+        Specification<Menu> spec = Specification.where(MenuSpecification.nameContains(query));
+
+        if (attribute != null && degree != null) {
+            Double[] range = getRangeForDegree(degree);
+            if (range != null) {
+                spec = spec.and(MenuSpecification.attributeInRange(attribute, range[0], range[1]));
+            }
+        }
+
+        List<Menu> menus = menuRepository.findAll(spec);
+        return ResponseEntity.ok().body(menus.stream()
+                .map(this::mapToMenuResponseDto)
+                .collect(Collectors.toList()));
+    }
+
+    private Double[] getRangeForDegree(String degree) {
+        return switch (degree.toUpperCase()) {
+            case "NONE" -> new Double[]{0.0, 0.0};
+            case "LOW" -> new Double[]{0.0, 0.25};
+            case "MEDIUM" -> new Double[]{0.25, 0.5};
+            case "HIGH" -> new Double[]{0.5, 0.75};
+            case "VERY_HIGH" -> new Double[]{0.75, 1.0};
+            default -> null;
+        };
     }
 
     // 메뉴 리포트
