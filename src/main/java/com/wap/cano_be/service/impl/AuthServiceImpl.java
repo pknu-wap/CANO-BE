@@ -87,6 +87,7 @@ public class AuthServiceImpl implements AuthService {
                 .socialId(token.get("id").getAsLong())
                 .providerId("kakao")
                 .role(MemberRole.USER)
+                .onboarded(false)
                 .build();
         return memberRepository.save(member);
     }

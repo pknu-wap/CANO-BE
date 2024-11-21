@@ -64,6 +64,8 @@ public class MemberService {
             member.setSweetness(requestDto.getSweetness());
         }
 
+        member.setOnboarded(true);
+
         member = memberRepository.save(member);
         return ResponseEntity.ok().body(new MemberResponseDto(member));
     }
