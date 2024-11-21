@@ -128,15 +128,31 @@ public class ReviewService {
         Review review = Review.builder()
                 .contents(requestDto.contents())
                 .score(requestDto.score())
-                .acidity(requestDto.acidity())
-                .body(requestDto.body())
-                .bitterness(requestDto.bitterness())
-                .sweetness(requestDto.sweetness())
                 .member(member)
                 .menu(menu)
                 .build();
 
-        reviewRepository.save(review);
+        try {
+            if (requestDto.acidity().isPresent()) {
+                review.setAcidity(requestDto.acidity().get().getPercentage());
+            }
+            if (requestDto.body().isPresent()) {
+                review.setBody(requestDto.body().get().getPercentage());
+            }
+            if (requestDto.bitterness().isPresent()) {
+                review.setBitterness(requestDto.bitterness().get().getPercentage());
+            }
+            if (requestDto.sweetness().isPresent()) {
+                review.setSweetness(requestDto.sweetness().get().getPercentage());
+            }
+            reviewRepository.save(review);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
 
         return ResponseEntity.ok().body(new ReviewResponseDto(review));
     }
