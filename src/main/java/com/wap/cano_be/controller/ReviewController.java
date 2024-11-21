@@ -56,4 +56,13 @@ public class ReviewController {
             @AuthenticationPrincipal PrincipalDetail principalDetail) {
         return reviewService.createReview(requestDto, menuId, principalDetail.getMember().getId());
     }
+
+    @DeleteMapping("reviews/{review_id}")
+    public ResponseEntity<?> deleteReviewById(
+            @PathVariable("review_id") long reviewId,
+            @AuthenticationPrincipal PrincipalDetail principalDetail
+    ){
+        long memberId = principalDetail.getMember().getId();
+        return reviewService.deleteReview(reviewId, memberId);
+    }
 }

@@ -112,18 +112,6 @@ public class MenuController {
 //        return getSuccessResponse();
 //    }
 
-    // 리뷰 삭제
-    @DeleteMapping("/{menu_id}/review")
-    public ResponseEntity<?> deleteReview(
-            @PathVariable("menu_id") long id,
-            @AuthenticationPrincipal PrincipalDetail principalDetail
-    ){
-        long memberId = principalDetail.getMember().getSocialId();
-        reviewService.deleteReview(id, memberId);
-
-        return getSuccessResponse();
-    }
-
     // 메뉴 리포트
     @PostMapping("/report")
     public ResponseEntity<?> reportMenu(@RequestBody MenuReportDto menuReportDto){
