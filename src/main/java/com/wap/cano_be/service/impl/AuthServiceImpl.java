@@ -17,10 +17,7 @@ import com.wap.cano_be.service.AuthService;
 import io.jsonwebtoken.Claims;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -120,6 +117,11 @@ public class AuthServiceImpl implements AuthService {
 
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Member with id: " + memberId + " is not found."));
 
+        // DB에 저장되어 있는 토큰인지 확인 -> 없는 경우 403 반환
+        Boolean isExist = refreshTokenRepository.existsById(requestDto.getRefreshToken());
+        if (!isExist) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         deleteExistingRefreshToken(requestDto.getRefreshToken());
 
         String accessToken = createAccessToken(member, member.getRole());
