@@ -112,8 +112,15 @@ public class ReviewService {
     public ResponseEntity<?> deleteReview(long reviewId, long memberId){
         Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new IllegalArgumentException("Review not found. reviewId: " + reviewId));
 
-        if (review.getMember().getId() != memberId) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        // 리뷰 작성자가 아닌 경우 -> 400 Bad Request 반환
+        if (review.getMember().getId() != memberId) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
+        // S3에서 이미지 삭제
+        for (ReviewImage image : review.getImages()) {
+            imageService.deleteImage(image.getUrl());
+        }
+
+        // 리뷰 삭제
         reviewRepository.delete(review);
 
         return ResponseEntity.ok().build();
