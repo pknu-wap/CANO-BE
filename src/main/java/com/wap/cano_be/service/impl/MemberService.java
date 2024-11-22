@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ public class MemberService {
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final ImageService imageService;
 
     public Optional<Member> findByEmail(String email) {
         return memberRepository.findByEmail(email);
@@ -47,7 +49,7 @@ public class MemberService {
         return ResponseEntity.ok().body(responseDto);
     }
 
-    public ResponseEntity<MemberResponseDto> updateMember(Long memberId, MemberUpdateRequestDto requestDto) {
+    public ResponseEntity<MemberResponseDto> updateMember(Long memberId, MemberUpdateRequestDto requestDto, MultipartFile image) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Member not found. memberId: " + memberId));
         member.setName(requestDto.getName());
 
@@ -62,6 +64,17 @@ public class MemberService {
         }
         if (requestDto.getSweetness() != null) {
             member.setSweetness(requestDto.getSweetness());
+        }
+
+        if (image != null && !image.isEmpty()) {
+            // 기존 이미지 삭제
+            if (member.getProfileImageUrl() != null) {
+                imageService.deleteImage(member.getProfileImageUrl());
+            }
+
+            // 새 이미지 업로드
+            String imageUrl = imageService.uploadImage(image);
+            member.setProfileImageUrl(imageUrl);
         }
 
         member.setOnboarded(true);

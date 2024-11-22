@@ -31,8 +31,12 @@ public class ImageService {
      */
     public String uploadImage(MultipartFile image) {
         String fileName = "images/" + UUID.randomUUID() + "_" + image.getOriginalFilename();
+        File convertedFile = convertMultiPartFileToFile(image);
 
-        amazonS3Client.putObject(new PutObjectRequest(bucketName, fileName, convertMultiPartFileToFile(image)).withCannedAcl(CannedAccessControlList.PublicRead));
+        amazonS3Client.putObject(new PutObjectRequest(bucketName, fileName, convertedFile).withCannedAcl(CannedAccessControlList.PublicRead));
+        if (!convertedFile.delete()) {
+            throw new RuntimeException("파일 삭제 실패");
+        };
         return amazonS3Client.getUrl(bucketName, fileName).toString();
     }
 

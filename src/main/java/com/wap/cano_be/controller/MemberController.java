@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -65,7 +66,11 @@ public class MemberController {
     }
 
     @PutMapping("/members/me")
-    public ResponseEntity<MemberResponseDto> updateMember(@RequestBody MemberUpdateRequestDto requestDto, @AuthenticationPrincipal PrincipalDetail principalDetail) {
-        return memberService.updateMember(principalDetail.getMember().getId(), requestDto);
+    public ResponseEntity<MemberResponseDto> updateMember(
+            @AuthenticationPrincipal PrincipalDetail principalDetail,
+            @RequestPart(value = "dto") MemberUpdateRequestDto requestDto,
+            @RequestPart(value = "image")MultipartFile image
+            ) {
+        return memberService.updateMember(principalDetail.getMember().getId(), requestDto, image);
     }
 }
