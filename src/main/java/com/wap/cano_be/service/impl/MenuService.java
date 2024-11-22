@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MenuService {
     private final MenuRepository menuRepository;
+    private final ImageService imageService;
 
     private Degree getDegree(String degree) {
         for (Degree deg : Degree.values()) {
@@ -157,12 +159,16 @@ public class MenuService {
 //    }
 
     // 메뉴 등록
-    public ResponseEntity<MenuResponseDto> createMenu(MenuRequestDto menuRequestDto) {
+    public ResponseEntity<MenuResponseDto> createMenu(MenuRequestDto menuRequestDto, MultipartFile image) {
         Menu menu = Menu.builder()
                 .name(menuRequestDto.cafeName() + " " + menuRequestDto.name())
-                .imageUrl(menuRequestDto.imageUrl())
                 .price(menuRequestDto.price())
                 .build();
+
+        if (image != null && !image.isEmpty()) {
+            String imageUrl = imageService.uploadImage(image);
+            menu.setImageUrl(imageUrl);
+        }
 
         menu = menuRepository.save(menu);
 
@@ -170,6 +176,7 @@ public class MenuService {
                 .id(menu.getId())
                 .name(menu.getName())
                 .price(menu.getPrice())
+                .imageUrl(menu.getImageUrl())
                 .build());
     }
 

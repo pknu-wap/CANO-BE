@@ -3,11 +3,13 @@ package com.wap.cano_be.domain;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.*;
 
 @Entity
 @Getter
+@Setter
 public class Menu {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

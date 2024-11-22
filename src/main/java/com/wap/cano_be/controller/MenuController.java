@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -90,10 +91,13 @@ public class MenuController {
 
     // 메뉴 등록
     @PostMapping
-    public ResponseEntity<MenuResponseDto> createMenu(@RequestBody MenuRequestDto menuRequestDto){
+    public ResponseEntity<MenuResponseDto> createMenu(
+            @RequestPart(value = "dto") MenuRequestDto requestDto,
+            @RequestPart(value = "image") MultipartFile image
+    ){
         log.info("========POST MENU========");
-        log.info("menuRequestDto: {}", menuRequestDto);
-        return menuService.createMenu(menuRequestDto);
+        log.info("menuRequestDto: {}", requestDto);
+        return menuService.createMenu(requestDto, image);
     }
 
     // 메뉴 조회
