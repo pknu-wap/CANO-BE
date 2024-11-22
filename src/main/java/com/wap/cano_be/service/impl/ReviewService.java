@@ -20,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -152,7 +154,7 @@ public class ReviewService {
             }
 
             // 이미지 업로드 및 URL 설정
-            if (images != null && !images.isEmpty()) {
+            if (images != null && !images.isEmpty() && !images.get(0).isEmpty()) {
                 List<String> imageUrls = imageService.uploadImages(images);
                 List<ReviewImage> reviewImages = imageUrls.stream()
                         .map(url -> ReviewImage.builder()
@@ -161,6 +163,8 @@ public class ReviewService {
                                 .build())
                         .toList();
                 review.setImages(reviewImages);
+            } else {
+                review.setImages(Collections.emptyList());
             }
 
             reviewRepository.save(review);
