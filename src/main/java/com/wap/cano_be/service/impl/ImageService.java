@@ -36,7 +36,7 @@ public class ImageService {
         amazonS3Client.putObject(new PutObjectRequest(bucketName, fileName, convertedFile).withCannedAcl(CannedAccessControlList.PublicRead));
         if (!convertedFile.delete()) {
             throw new RuntimeException("파일 삭제 실패");
-        };
+        }
         return amazonS3Client.getUrl(bucketName, fileName).toString();
     }
 
