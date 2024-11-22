@@ -6,6 +6,9 @@ CANO 애플리케이션 백엔드 리포지토리입니다.
 ## application.properties
 src/resources 에 추가
 ```properties
+# JWT
+jwt.secret={SECRET_KEY}
+
 # MySQL
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.datasource.url=jdbc:mysql://localhost:3306/cano
@@ -20,8 +23,11 @@ spring.jpa.properties.hibernate.format_sql=true
 spring.data.redis.host=localhost
 spring.data.redis.port=6379
 
-# JWT
-jwt.secret={SECRET_KEY}
+# S3
+cloud.aws.s3.bucket=cano-server
+cloud.aws.credentials.accessKey={AWS_ACCESS_KEY}
+cloud.aws.credentials.secretKey={AWS_SECRET_KEY}
+cloud.aws.region.static=ap-northeast-2
 ```
 
 ## 🗃 팀 위키
