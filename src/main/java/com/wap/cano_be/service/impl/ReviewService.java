@@ -3,6 +3,7 @@ package com.wap.cano_be.service.impl;
 import com.wap.cano_be.domain.Member;
 import com.wap.cano_be.domain.Menu;
 import com.wap.cano_be.domain.Review;
+import com.wap.cano_be.domain.ReviewImage;
 import com.wap.cano_be.domain.enums.Degree;
 import com.wap.cano_be.dto.review.ReviewRequestDto;
 import com.wap.cano_be.dto.review.ReviewResponseDto;
@@ -11,28 +12,25 @@ import com.wap.cano_be.repository.MenuRepository;
 import com.wap.cano_be.repository.ReviewRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final MenuRepository menuRepository;
     private final MemberRepository memberRepository;
-
-    @Autowired
-    public ReviewService(ReviewRepository reviewRepository, MenuRepository menuRepository, MemberRepository memberRepository) {
-        this.reviewRepository = reviewRepository;
-        this.menuRepository = menuRepository;
-        this.memberRepository = memberRepository;
-    }
+    private final ImageService imageService;
 
     private double getDegree(String attribute){
         for (Degree deg:
@@ -121,7 +119,7 @@ public class ReviewService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<ReviewResponseDto> createReview(ReviewRequestDto requestDto, long menuId, long memberId) {
+    public ResponseEntity<ReviewResponseDto> createReview(ReviewRequestDto requestDto, long menuId, long memberId, List<MultipartFile> images) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("멤버가 없습니다. memberId: " + memberId));
         Menu menu = menuRepository.findById(menuId);
 
@@ -145,14 +143,24 @@ public class ReviewService {
             if (requestDto.sweetness().isPresent()) {
                 review.setSweetness(requestDto.sweetness().get().getPercentage());
             }
+
+            // 이미지 업로드 및 URL 설정
+            if (images != null && !images.isEmpty()) {
+                List<String> imageUrls = imageService.uploadImages(images);
+                List<ReviewImage> reviewImages = imageUrls.stream()
+                        .map(url -> ReviewImage.builder()
+                                .url(url)
+                                .review(review)
+                                .build())
+                        .toList();
+                review.setImages(reviewImages);
+            }
+
             reviewRepository.save(review);
-
-
         } catch (Exception e) {
             e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
-
 
         return ResponseEntity.ok().body(new ReviewResponseDto(review));
     }

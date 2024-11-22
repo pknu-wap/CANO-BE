@@ -34,7 +34,7 @@ public class Review {
     private Double sweetness;
 
     @ManyToOne
-    @JoinColumn(name = "member_id", nullable = true)
+    @JoinColumn(name = "member_id")
     @OnDelete(action = OnDeleteAction.SET_NULL)
     private Member member;
 
@@ -43,10 +43,8 @@ public class Review {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Menu menu;
 
-    @ElementCollection
-    @CollectionTable(name = "review_images", joinColumns = @JoinColumn(name = "review_id"))
-    @Column(name = "images")
-    private List<String> imageUrls = new ArrayList<>();
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReviewImage> images = new ArrayList<>();
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -56,7 +54,7 @@ public class Review {
     public Review(){}
 
     @Builder
-    public Review(String contents, Double score, Double acidity, Double body, Double bitterness, Double sweetness, Member member, Menu menu, List<String> imageUrls, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Review(String contents, Double score, Double acidity, Double body, Double bitterness, Double sweetness, Member member, Menu menu, List<ReviewImage> images, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.contents = contents;
         this.score = score;
         this.acidity = acidity;
@@ -65,7 +63,7 @@ public class Review {
         this.sweetness = sweetness;
         this.member = member;
         this.menu = menu;
-        this.imageUrls = imageUrls;
+        this.images = images;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
