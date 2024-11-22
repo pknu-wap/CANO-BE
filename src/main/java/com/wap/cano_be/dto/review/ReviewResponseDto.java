@@ -1,6 +1,7 @@
 package com.wap.cano_be.dto.review;
 
 import com.wap.cano_be.domain.Review;
+import com.wap.cano_be.domain.ReviewImage;
 import com.wap.cano_be.domain.enums.Degree;
 import lombok.Builder;
 
@@ -34,7 +35,7 @@ public record ReviewResponseDto(
                 Degree.fromPercentage(review.getSweetness()),
                 review.getMember().getId(),
                 review.getMenu().getId(),
-                review.getImageUrls(),
+                review.getImages().stream().map(ReviewImage::getUrl).toList(),
                 review.getCreatedAt()
         );
     }

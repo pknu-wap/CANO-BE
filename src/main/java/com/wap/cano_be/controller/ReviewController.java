@@ -7,6 +7,7 @@ import com.wap.cano_be.service.impl.ReviewService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,10 +52,11 @@ public class ReviewController {
 
     @PostMapping("/menus/{menu_id}/reviews")
     public ResponseEntity<ReviewResponseDto> createReview(
-            @RequestBody ReviewRequestDto requestDto,
+            @RequestPart(value = "dto") ReviewRequestDto requestDto,
+            @RequestPart(value = "images") List<MultipartFile> images,
             @PathVariable("menu_id") long menuId,
             @AuthenticationPrincipal PrincipalDetail principalDetail) {
-        return reviewService.createReview(requestDto, menuId, principalDetail.getMember().getId());
+        return reviewService.createReview(requestDto, menuId, principalDetail.getMember().getId(), images);
     }
 
     @DeleteMapping("reviews/{review_id}")

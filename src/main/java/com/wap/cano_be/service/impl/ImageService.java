@@ -13,6 +13,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -38,6 +40,20 @@ public class ImageService {
             throw new RuntimeException("파일 삭제 실패");
         }
         return amazonS3Client.getUrl(bucketName, fileName).toString();
+    }
+
+    /**
+     * 여러 이미지 업로드
+     * @param images Multipart 이미지 파일 리스트
+     * @return 업로드된 이미지 URL 주소 리스트
+     */
+    public List<String> uploadImages(List<MultipartFile> images) {
+        List<String> imageUrls = new ArrayList<>();
+        for (MultipartFile image : images) {
+            String imageUrl = uploadImage(image);
+            imageUrls.add(imageUrl);
+        }
+        return imageUrls;
     }
 
     /**
