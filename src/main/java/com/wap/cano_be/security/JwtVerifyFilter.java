@@ -58,12 +58,14 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             Gson gson = new Gson();
             String json = "";
+
             if (e instanceof CustomExpiredJwtException) {
                 json = gson.toJson(Map.of("Token_Expired", e.getMessage()));
             } else {
                 json = gson.toJson(Map.of("error", e.getMessage()));
             }
 
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json; charset=UTF-8");
             PrintWriter printWriter = response.getWriter();
             printWriter.println(json);

@@ -25,7 +25,7 @@ public class Member {
     private Degree body;
     private Degree bitterness;
     private Degree sweetness;
-    private boolean onboarded;
+    private boolean onboarded = false;
     @Setter
     private String providerId;
     @Enumerated(EnumType.STRING)

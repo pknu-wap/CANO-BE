@@ -38,17 +38,17 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-    public ResponseEntity<ResponseDto> getMemberByEmail(String email) {
+    public ResponseEntity<? super MemberResponseDto> getMemberByEmail(String email) {
         Optional<Member> member = memberRepository.findByEmail(email);
 
         if(member.isEmpty()){
             return MemberResponseDto.noSuchUser();
         }
 
-        MemberResponseDto responseDto = new MemberResponseDto(member.get().getName(), member.get().getEmail(), member.get().getSocialId(), member.get().getProfileImageUrl());
-        return ResponseEntity.ok().body(responseDto);
+        return ResponseEntity.ok().body(new MemberResponseDto(member.get()));
     }
 
+    @Transactional
     public ResponseEntity<MemberResponseDto> updateMember(Long memberId, MemberUpdateRequestDto requestDto, MultipartFile image) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Member not found. memberId: " + memberId));
         member.setName(requestDto.getName());
@@ -79,7 +79,8 @@ public class MemberService {
 
         member.setOnboarded(true);
 
-        member = memberRepository.save(member);
+        memberRepository.save(member);
+
         return ResponseEntity.ok().body(new MemberResponseDto(member));
     }
 }
