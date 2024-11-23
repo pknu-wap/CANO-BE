@@ -69,7 +69,7 @@ public class MemberController {
     public ResponseEntity<MemberResponseDto> updateMember(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @RequestPart(value = "dto") MemberUpdateRequestDto requestDto,
-            @RequestPart(value = "image")MultipartFile image
+            @RequestPart(value = "image", required = false)MultipartFile image
             ) {
         return memberService.updateMember(principalDetail.getMember().getId(), requestDto, image);
     }

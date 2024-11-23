@@ -93,7 +93,7 @@ public class MenuController {
     @PostMapping
     public ResponseEntity<MenuResponseDto> createMenu(
             @RequestPart(value = "dto") MenuRequestDto requestDto,
-            @RequestPart(value = "image") MultipartFile image
+            @RequestPart(value = "image", required = false) MultipartFile image
     ){
         log.info("========POST MENU========");
         log.info("menuRequestDto: {}", requestDto);

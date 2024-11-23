@@ -53,7 +53,7 @@ public class ReviewController {
     @PostMapping("/menus/{menu_id}/reviews")
     public ResponseEntity<ReviewResponseDto> createReview(
             @RequestPart(value = "dto") ReviewRequestDto requestDto,
-            @RequestPart(value = "images") List<MultipartFile> images,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
             @PathVariable("menu_id") long menuId,
             @AuthenticationPrincipal PrincipalDetail principalDetail) {
         return reviewService.createReview(requestDto, menuId, principalDetail.getMember().getId(), images);
