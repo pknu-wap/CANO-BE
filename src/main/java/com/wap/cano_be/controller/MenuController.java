@@ -128,28 +128,4 @@ public class MenuController {
         log.info("menuReportDto: {}", menuReportDto);
         return getSuccessResponse();
     }
-
-    // 좋아요
-//    @PostMapping("/{menu_id}/like")
-//    public ResponseEntity<?> setLike(
-//            @PathVariable("menu_id") long id,
-//            @RequestBody MenuLikeDto menuLikeDto,
-//            @AuthenticationPrincipal PrincipalDetail principalDetail){
-//
-//        if(menuLikeDto == null){
-//            Map<String, String> response = new HashMap<>();
-//            response.put("error", "잘못된 요청 양식 입니다.");
-//            return ResponseEntity.badRequest().body(response);
-//        }
-//
-//        Long memberId = principalDetail.getMember().getId();
-//        if(memberId == null){
-//            Map<String, String> response = new HashMap<>();
-//            response.put("error", "유효하지 않은 사용자입니다.");
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-//        }
-//
-//        likeService.updateLike(memberId, id, menuLikeDto.like());
-//        return getSuccessResponse();
-//    }
 }
