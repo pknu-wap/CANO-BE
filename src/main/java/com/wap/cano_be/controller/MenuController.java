@@ -129,27 +129,19 @@ public class MenuController {
         return getSuccessResponse();
     }
 
-    // 좋아요
-//    @PostMapping("/{menu_id}/like")
-//    public ResponseEntity<?> setLike(
-//            @PathVariable("menu_id") long id,
-//            @RequestBody MenuLikeDto menuLikeDto,
-//            @AuthenticationPrincipal PrincipalDetail principalDetail){
-//
-//        if(menuLikeDto == null){
-//            Map<String, String> response = new HashMap<>();
-//            response.put("error", "잘못된 요청 양식 입니다.");
-//            return ResponseEntity.badRequest().body(response);
-//        }
-//
-//        Long memberId = principalDetail.getMember().getId();
-//        if(memberId == null){
-//            Map<String, String> response = new HashMap<>();
-//            response.put("error", "유효하지 않은 사용자입니다.");
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-//        }
-//
-//        likeService.updateLike(memberId, id, menuLikeDto.like());
-//        return getSuccessResponse();
-//    }
+    // 좋아요 등록
+    @PostMapping("/{menu_id}/like")
+    public ResponseEntity<?> like(
+            @PathVariable("menu_id") long menuId,
+            @AuthenticationPrincipal PrincipalDetail principalDetail){
+        return likeService.insert(principalDetail.getMember().getId(), menuId);
+    }
+
+    // 좋아요 취소
+    @DeleteMapping("/{menu_id}/like")
+    public ResponseEntity<?> unlike(
+            @PathVariable("menu_id") long menuId,
+            @AuthenticationPrincipal PrincipalDetail principalDetail){
+        return likeService.delete(principalDetail.getMember().getId(), menuId);
+    }
 }
