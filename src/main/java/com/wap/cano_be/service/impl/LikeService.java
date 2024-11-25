@@ -12,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 public class LikeService {
@@ -56,6 +59,15 @@ public class LikeService {
 
         // 없으면 409 에러 반환
         return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    }
+
+    // [TEST] 좋아요한 메뉴 찾기
+    public ResponseEntity<List<Menu>> getLikedMenus(long memberId){
+        Member member = memberRepository.findById(memberId).orElseThrow(()->new IllegalArgumentException("Member not found"));
+        return ResponseEntity.ok().body(
+                member.getLikes().stream()
+                .map(Like::getMenu)
+                .collect(Collectors.toList()));
     }
 
 }

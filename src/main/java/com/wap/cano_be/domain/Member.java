@@ -6,6 +6,9 @@ import com.wap.cano_be.domain.enums.MemberRole;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -32,4 +35,6 @@ public class Member {
     private MemberRole role;
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
 }

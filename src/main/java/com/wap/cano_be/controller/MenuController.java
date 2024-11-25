@@ -128,20 +128,4 @@ public class MenuController {
         log.info("menuReportDto: {}", menuReportDto);
         return getSuccessResponse();
     }
-
-    // 좋아요 등록
-    @PostMapping("/{menu_id}/like")
-    public ResponseEntity<?> like(
-            @PathVariable("menu_id") long menuId,
-            @AuthenticationPrincipal PrincipalDetail principalDetail){
-        return likeService.insert(principalDetail.getMember().getId(), menuId);
-    }
-
-    // 좋아요 취소
-    @DeleteMapping("/{menu_id}/like")
-    public ResponseEntity<?> unlike(
-            @PathVariable("menu_id") long menuId,
-            @AuthenticationPrincipal PrincipalDetail principalDetail){
-        return likeService.delete(principalDetail.getMember().getId(), menuId);
-    }
 }

@@ -2,8 +2,10 @@ package com.wap.cano_be.domain;
 
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 
 @Entity
+@Getter
 @Table(name = "menu_like")
 public class Like {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
